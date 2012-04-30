@@ -1,4 +1,5 @@
-body {
+body
+{
   font-family: "Courier New";
   font-size: 8pt;
   background-color: #DFDFFF;
@@ -7,7 +8,8 @@ body {
   margin: 0;
 }
 
-table, td {
+table, td
+{
   background: #E7E7FF;
   border-color: black;
   border-style: solid;
@@ -19,14 +21,18 @@ table, td {
   font-size: 8pt;
 }
 
-table.main, td.main, tr.main {
+table.main, td.main, tr.main
+{
   background-color: #DFDFFF;
   border-width: 4px;
   border-style: none;
   text-align: left;
 }
 
-td       { padding: 2px 10px 2px 10px; }
+td
+{
+  padding: 2px 10px 2px 10px;
+}
 
 .left    { text-align: left; }
 .center  { text-align: center; }
@@ -39,7 +45,8 @@ td.black { background: #000000; }
 
 #Content { margin: 8pt; }
 
-#ShareLink {
+#ShareLink
+{
   background: #E7E7FF;
   border-color: black;
   border-style: solid;
@@ -47,10 +54,10 @@ td.black { background: #000000; }
   padding: 2px;
 }
 
-#Report {
+#Report
+{
   font-size: 12pt;
   font-weight: bold;
 }
 
 #FunctionCall { background: #FFFFFF; }
-
