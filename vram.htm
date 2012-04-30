@@ -1,0 +1,683 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <meta name="description" content="View conflicts in your VRAM BG allocation for your NDS homebrew. This is the worksheet you need to satisfy in order to ensure non-corrupted BG graphics." />
+  <meta name="keywords" content="nds, bg, background, vram, allocate, allocation, homebrew, nintendo ds" />
+  <link rel="stylesheet" href="vram.css">
+  <script type="text/javascript" src="vram.js"></script>
+  <title>NDS Homebrew VRAM BG Allocation Conflict Viewer</title>
+ </head>
+ <body onLoad="loadp()">
+  <div id="Content">
+   <h1>NDS Homebrew VRAM BG Allocation Conflict Viewer</h1>
+   <h4>For the VRAM Banks Selector tool <a href="banks.php">click here</a></h4>
+   <h4>Please contact mtheall in #dsdev on irc.blitzed.org regarding errors, discrepancies, suggestions, or bugs with this tool</h4>
+   <h4>Link for sharing: <span id='ShareLink'>Javascript must be enabled</span></h4>
+   <hr />
+   <form name='bgvram'>
+    <table class='main'>
+     <tr><td class='main' style='width:350px'>
+      <h2>Base select</h2>
+      <p>DISPCNT Map Base 64KB Step</p>
+      <select name="MS" onChange="upd()">
+       <option value="0" selected>0: 0x06000000-0x0600FFFF</option>
+       <option value="1"         >1: 0x06010000-0x0601FFFF</option>
+       <option value="2"         >2: 0x06020000-0x0602FFFF</option>
+       <option value="3"         >3: 0x06030000-0x0603FFFF</option>
+       <option value="4"         >4: 0x06040000-0x0604FFFF</option>
+       <option value="5"         >5: 0x06050000-0x0605FFFF</option>
+       <option value="6"         >6: 0x06060000-0x0606FFFF</option>
+       <option value="7"         >7: 0x06070000-0x0607FFFF</option>
+      </select>
+      <p>DISPCNT Tile Base 64KB Step</p>
+      <select name="TS" onChange="upd()">
+       <option value="0" selected>0: 0x06000000-0x0600FFFF</option>
+       <option value="1"         >1: 0x06010000-0x0601FFFF</option>
+       <option value="2"         >2: 0x06020000-0x0602FFFF</option>
+       <option value="3"         >3: 0x06030000-0x0603FFFF</option>
+       <option value="4"         >4: 0x06040000-0x0604FFFF</option>
+       <option value="5"         >5: 0x06050000-0x0605FFFF</option>
+       <option value="6"         >6: 0x06060000-0x0606FFFF</option>
+       <option value="7"         >7: 0x06070000-0x0607FFFF</option>
+      </select>
+     </td><td class='main'>
+      <h2>Results</h2>
+      <div id="Report"></div>
+      <br />
+      <div id="Mapping_Status"></div>
+      <div id="Recommended_Mode"></div>
+      <div id="Working_Engines"></div>
+      <br />
+      <div id="BG0_Usage"></div>
+      <div id="BG1_Usage"></div>
+      <div id="BG2_Usage"></div>
+      <div id="BG3_Usage"></div>
+      <br />
+     </td></tr><tr><td class='main'>
+      <h2>Options</h2>
+      <table>
+       <tr><td style='width:120px'><b>Background 0</b></td><td style='width:160px'>
+        <select name="T0" onChange="upd()">
+         <option value="NULL" selected>NULL</option>
+         <option value="Text8bpp"     >BgType_Text8bpp</option>
+         <option value="Text4bpp"     >BgType_Text4bpp</option>
+        </select>
+       </td></tr>
+       <tr id='BG_TS0' style='display:none'>
+        <td>Size</td><td>
+         <select name="TS0" onChange="upd()">
+          <option value="T_256x256" selected>BgSize_T_256x256</option>
+          <option value="T_512x256"         >BgSize_T_512x256</option>
+          <option value="T_256x512"         >BgSize_T_256x512</option>
+          <option value="T_512x512"         >BgSize_T_512x512</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_NT0' style='display:none'>
+        <td>Maximum Tiles</td><td>
+         <select name="NT0" onChange="upd()">
+          <option value="32" selected>&lt;= 32 Tiles</option>
+          <option value="64"         >&lt;= 64 Tiles</option>
+          <option value="96"         >&lt;= 96 Tiles</option>
+          <option value="128"        >&lt;= 128 Tiles</option>
+          <option value="160"        >&lt;= 160 Tiles</option>
+          <option value="192"        >&lt;= 192 Tiles</option>
+          <option value="224"        >&lt;= 224 Tiles</option>
+          <option value="256"        >&lt;= 256 Tiles</option>
+          <option value="288"        >&lt;= 288 Tiles</option>
+          <option value="320"        >&lt;= 320 Tiles</option>
+          <option value="352"        >&lt;= 352 Tiles</option>
+          <option value="384"        >&lt;= 384 Tiles</option>
+          <option value="416"        >&lt;= 416 Tiles</option>
+          <option value="448"        >&lt;= 448 Tiles</option>
+          <option value="480"        >&lt;= 480 Tiles</option>
+          <option value="512"        >&lt;= 512 Tiles</option>
+          <option value="544"        >&lt;= 544 Tiles</option>
+          <option value="576"        >&lt;= 576 Tiles</option>
+          <option value="608"        >&lt;= 608 Tiles</option>
+          <option value="640"        >&lt;= 640 Tiles</option>
+          <option value="672"        >&lt;= 672 Tiles</option>
+          <option value="704"        >&lt;= 704 Tiles</option>
+          <option value="736"        >&lt;= 736 Tiles</option>
+          <option value="768"        >&lt;= 768 Tiles</option>
+          <option value="800"        >&lt;= 800 Tiles</option>
+          <option value="832"        >&lt;= 832 Tiles</option>
+          <option value="864"        >&lt;= 864 Tiles</option>
+          <option value="896"        >&lt;= 896 Tiles</option>
+          <option value="928"        >&lt;= 928 Tiles</option>
+          <option value="960"        >&lt;= 960 Tiles</option>
+          <option value="992"        >&lt;= 992 Tiles</option>
+          <option value="1024"       >&lt;= 1024 Tiles</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_MB0' style='display:none'>
+        <td>Map Base</td><td>
+         <select name="MB0" onChange="upd()">
+          <option value="0" selected>Map Base 0</option>
+          <option value="1"         >Map Base 1</option>
+          <option value="2"         >Map Base 2</option>
+          <option value="3"         >Map Base 3</option>
+          <option value="4"         >Map Base 4</option>
+          <option value="5"         >Map Base 5</option>
+          <option value="6"         >Map Base 6</option>
+          <option value="7"         >Map Base 7</option>
+          <option value="8"         >Map Base 8</option>
+          <option value="9"         >Map Base 9</option>
+          <option value="10"        >Map Base 10</option>
+          <option value="11"        >Map Base 11</option>
+          <option value="12"        >Map Base 12</option>
+          <option value="13"        >Map Base 13</option>
+          <option value="14"        >Map Base 14</option>
+          <option value="15"        >Map Base 15</option>
+          <option value="16"        >Map Base 16</option>
+          <option value="17"        >Map Base 17</option>
+          <option value="18"        >Map Base 18</option>
+          <option value="19"        >Map Base 19</option>
+          <option value="20"        >Map Base 20</option>
+          <option value="21"        >Map Base 21</option>
+          <option value="22"        >Map Base 22</option>
+          <option value="23"        >Map Base 23</option>
+          <option value="24"        >Map Base 24</option>
+          <option value="25"        >Map Base 25</option>
+          <option value="26"        >Map Base 26</option>
+          <option value="27"        >Map Base 27</option>
+          <option value="28"        >Map Base 28</option>
+          <option value="29"        >Map Base 29</option>
+          <option value="30"        >Map Base 30</option>
+          <option value="31"        >Map Base 31</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_TB0' style='display:none'>
+        <td>Tile Base</td><td>
+         <select name="TB0" onChange="upd()">
+          <option value="0" selected>Tile Base 0</option>
+          <option value="1"         >Tile Base 1</option>
+          <option value="2"         >Tile Base 2</option>
+          <option value="3"         >Tile Base 3</option>
+          <option value="4"         >Tile Base 4</option>
+          <option value="5"         >Tile Base 5</option>
+          <option value="6"         >Tile Base 6</option>
+          <option value="7"         >Tile Base 7</option>
+          <option value="8"         >Tile Base 8</option>
+          <option value="9"         >Tile Base 9</option>
+          <option value="10"        >Tile Base 10</option>
+          <option value="11"        >Tile Base 11</option>
+          <option value="12"        >Tile Base 12</option>
+          <option value="13"        >Tile Base 13</option>
+          <option value="14"        >Tile Base 14</option>
+          <option value="15"        >Tile Base 15</option>
+         </select>
+        </td>
+       </tr>
+       <tr><td colspan="2"><div id="BG_DESC0" class="left"></div></td></tr>
+       <tr><td colspan="2" style="background:#777799"></td></tr>
+       <tr>
+        <td><b>Background 1</b></td><td>
+        <select name="T1" onChange="upd()">
+         <option value="NULL" selected>NULL</option>
+         <option value="Text8bpp"     >BgType_Text8bpp</option>
+         <option value="Text4bpp"     >BgType_Text4bpp</option>
+        </select>
+       </td></tr>
+       <tr id='BG_TS1' style='display:none'>
+        <td>Size</td><td>
+         <select name="TS1" onChange="upd()">
+          <option value="T_256x256" selected>BgSize_T_256x256</option>
+          <option value="T_512x256"         >BgSize_T_512x256</option>
+          <option value="T_256x512"         >BgSize_T_256x512</option>
+          <option value="T_512x512"         >BgSize_T_512x512</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_NT1' style='display:none'>
+        <td>Maximum Tiles</td><td>
+         <select name="NT1" onChange="upd()">
+          <option value="32" selected>&lt;= 32 Tiles</option>
+          <option value="64"         >&lt;= 64 Tiles</option>
+          <option value="96"         >&lt;= 96 Tiles</option>
+          <option value="128"        >&lt;= 128 Tiles</option>
+          <option value="160"        >&lt;= 160 Tiles</option>
+          <option value="192"        >&lt;= 192 Tiles</option>
+          <option value="224"        >&lt;= 224 Tiles</option>
+          <option value="256"        >&lt;= 256 Tiles</option>
+          <option value="288"        >&lt;= 288 Tiles</option>
+          <option value="320"        >&lt;= 320 Tiles</option>
+          <option value="352"        >&lt;= 352 Tiles</option>
+          <option value="384"        >&lt;= 384 Tiles</option>
+          <option value="416"        >&lt;= 416 Tiles</option>
+          <option value="448"        >&lt;= 448 Tiles</option>
+          <option value="480"        >&lt;= 480 Tiles</option>
+          <option value="512"        >&lt;= 512 Tiles</option>
+          <option value="544"        >&lt;= 544 Tiles</option>
+          <option value="576"        >&lt;= 576 Tiles</option>
+          <option value="608"        >&lt;= 608 Tiles</option>
+          <option value="640"        >&lt;= 640 Tiles</option>
+          <option value="672"        >&lt;= 672 Tiles</option>
+          <option value="704"        >&lt;= 704 Tiles</option>
+          <option value="736"        >&lt;= 736 Tiles</option>
+          <option value="768"        >&lt;= 768 Tiles</option>
+          <option value="800"        >&lt;= 800 Tiles</option>
+          <option value="832"        >&lt;= 832 Tiles</option>
+          <option value="864"        >&lt;= 864 Tiles</option>
+          <option value="896"        >&lt;= 896 Tiles</option>
+          <option value="928"        >&lt;= 928 Tiles</option>
+          <option value="960"        >&lt;= 960 Tiles</option>
+          <option value="992"        >&lt;= 992 Tiles</option>
+          <option value="1024"       >&lt;= 1024 Tiles</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_MB1' style='display:none'>
+        <td>Map Base</td><td>
+         <select name="MB1" onChange="upd()">
+          <option value="0" selected>Map Base 0</option>
+          <option value="1"         >Map Base 1</option>
+          <option value="2"         >Map Base 2</option>
+          <option value="3"         >Map Base 3</option>
+          <option value="4"         >Map Base 4</option>
+          <option value="5"         >Map Base 5</option>
+          <option value="6"         >Map Base 6</option>
+          <option value="7"         >Map Base 7</option>
+          <option value="8"         >Map Base 8</option>
+          <option value="9"         >Map Base 9</option>
+          <option value="10"        >Map Base 10</option>
+          <option value="11"        >Map Base 11</option>
+          <option value="12"        >Map Base 12</option>
+          <option value="13"        >Map Base 13</option>
+          <option value="14"        >Map Base 14</option>
+          <option value="15"        >Map Base 15</option>
+          <option value="16"        >Map Base 16</option>
+          <option value="17"        >Map Base 17</option>
+          <option value="18"        >Map Base 18</option>
+          <option value="19"        >Map Base 19</option>
+          <option value="20"        >Map Base 20</option>
+          <option value="21"        >Map Base 21</option>
+          <option value="22"        >Map Base 22</option>
+          <option value="23"        >Map Base 23</option>
+          <option value="24"        >Map Base 24</option>
+          <option value="25"        >Map Base 25</option>
+          <option value="26"        >Map Base 26</option>
+          <option value="27"        >Map Base 27</option>
+          <option value="28"        >Map Base 28</option>
+          <option value="29"        >Map Base 29</option>
+          <option value="30"        >Map Base 30</option>
+          <option value="31"        >Map Base 31</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_TB1' style='display:none'>
+        <td>Tile Base</td><td>
+         <select name="TB1" onChange="upd()">
+          <option value="0" selected>Tile Base 0</option>
+          <option value="1"         >Tile Base 1</option>
+          <option value="2"         >Tile Base 2</option>
+          <option value="3"         >Tile Base 3</option>
+          <option value="4"         >Tile Base 4</option>
+          <option value="5"         >Tile Base 5</option>
+          <option value="6"         >Tile Base 6</option>
+          <option value="7"         >Tile Base 7</option>
+          <option value="8"         >Tile Base 8</option>
+          <option value="9"         >Tile Base 9</option>
+          <option value="10"        >Tile Base 10</option>
+          <option value="11"        >Tile Base 11</option>
+          <option value="12"        >Tile Base 12</option>
+          <option value="13"        >Tile Base 13</option>
+          <option value="14"        >Tile Base 14</option>
+          <option value="15"        >Tile Base 15</option>
+         </select>
+        </td>
+       </tr>
+       <tr><td colspan="2"><div id="BG_DESC1" class="left"></div></td></tr>
+       <tr><td colspan="2" style="background:#777799"></td></tr>
+       <tr>
+        <td><b>Background 2</b></td><td>
+        <select name="T2" onChange="upd()">
+         <option value="NULL" selected>NULL</option>
+         <option value="Text8bpp"     >BgType_Text8bpp</option>
+         <option value="Text4bpp"     >BgType_Text4bpp</option>
+         <option value="Rotation"     >BgType_Rotation</option>
+         <option value="ExRotation"   >BgType_ExRotation</option>
+         <option value="Bmp8"         >BgType_Bmp8</option>
+         <option value="Bmp16"        >BgType_Bmp16</option>
+        </select>
+       </td></tr>
+       <tr id='BG_TS2' style='display:none'>
+        <td>Size</td><td>
+         <select name="TS2" onChange="upd()">
+          <option value="T_256x256" selected>BgSize_T_256x256</option>
+          <option value="T_512x256"         >BgSize_T_512x256</option>
+          <option value="T_256x512"         >BgSize_T_256x512</option>
+          <option value="T_512x512"         >BgSize_T_512x512</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_RS2' style='display:none'>
+        <td>Size</td><td>
+         <select name="RS2" onChange="upd()">
+          <option value="R_128x128" selected>BgSize_R_128x128</option>
+          <option value="R_256x256"         >BgSize_R_256x256</option>
+          <option value="R_512x512"         >BgSize_R_512x512</option>
+          <option value="R_1024x1024"       >BgSize_R_1024x1024</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_ERS2' style='display:none'>
+        <td>Size</td><td>
+         <select name="ERS2" onChange="upd()">
+          <option value="ER_128x128" selected>BgSize_ER_128x128</option>
+          <option value="ER_256x256"         >BgSize_ER_256x256</option>
+          <option value="ER_512x512"         >BgSize_ER_512x512</option>
+          <option value="ER_1024x1024"       >BgSize_ER_1024x1024</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_B8S2' style='display:none'>
+        <td>Size</td><td>
+         <select name="B8S2" onChange="upd()">
+          <option value="B8_128x128" selected>BgSize_B8_128x128</option>
+          <option value="B8_256x192"         >Note1: 256x192</option>
+          <option value="B8_256x256"         >BgSize_B8_256x256</option>
+          <option value="B8_512x256"         >BgSize_B8_512x256</option>
+          <option value="B8_512x512"         >BgSize_B8_512x512</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_B16S2' style='display:none'>
+        <td>Size</td><td>
+         <select name="B16S2" onChange="upd()">
+          <option value="B16_128x128" selected>BgSize_B16_128x128</option>
+          <option value="B16_256x192"         >Note1: 256x192</option>
+          <option value="B16_256x256"         >BgSize_B16_256x256</option>
+          <option value="B16_512x256"         >BgSize_B16_512x256</option>
+          <option value="B16_512x512"         >BgSize_B16_512x512</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_NT2' style='display:none'>
+        <td>Maximum Tiles</td><td>
+         <select name="NT2" onChange="upd()">
+          <option value="32" selected>&lt;= 32 Tiles</option>
+          <option value="64"         >&lt;= 64 Tiles</option>
+          <option value="96"         >&lt;= 96 Tiles</option>
+          <option value="128"        >&lt;= 128 Tiles</option>
+          <option value="160"        >&lt;= 160 Tiles</option>
+          <option value="192"        >&lt;= 192 Tiles</option>
+          <option value="224"        >&lt;= 224 Tiles</option>
+          <option value="256"        >&lt;= 256 Tiles</option>
+          <option value="288"        >&lt;= 288 Tiles</option>
+          <option value="320"        >&lt;= 320 Tiles</option>
+          <option value="352"        >&lt;= 352 Tiles</option>
+          <option value="384"        >&lt;= 384 Tiles</option>
+          <option value="416"        >&lt;= 416 Tiles</option>
+          <option value="448"        >&lt;= 448 Tiles</option>
+          <option value="480"        >&lt;= 480 Tiles</option>
+          <option value="512"        >&lt;= 512 Tiles</option>
+          <option value="544"        >&lt;= 544 Tiles</option>
+          <option value="576"        >&lt;= 576 Tiles</option>
+          <option value="608"        >&lt;= 608 Tiles</option>
+          <option value="640"        >&lt;= 640 Tiles</option>
+          <option value="672"        >&lt;= 672 Tiles</option>
+          <option value="704"        >&lt;= 704 Tiles</option>
+          <option value="736"        >&lt;= 736 Tiles</option>
+          <option value="768"        >&lt;= 768 Tiles</option>
+          <option value="800"        >&lt;= 800 Tiles</option>
+          <option value="832"        >&lt;= 832 Tiles</option>
+          <option value="864"        >&lt;= 864 Tiles</option>
+          <option value="896"        >&lt;= 896 Tiles</option>
+          <option value="928"        >&lt;= 928 Tiles</option>
+          <option value="960"        >&lt;= 960 Tiles</option>
+          <option value="992"        >&lt;= 992 Tiles</option>
+          <option value="1024"       >&lt;= 1024 Tiles</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_RNT2' style='display:none'>
+        <td>Maximum Tiles</td><td>
+         <select name="RNT2" onChange="upd()">
+          <option value="32" selected>&lt;= 32 Tiles</option>
+          <option value="64"         >&lt;= 64 Tiles</option>
+          <option value="96"         >&lt;= 96 Tiles</option>
+          <option value="128"        >&lt;= 128 Tiles</option>
+          <option value="160"        >&lt;= 160 Tiles</option>
+          <option value="192"        >&lt;= 192 Tiles</option>
+          <option value="224"        >&lt;= 224 Tiles</option>
+          <option value="256"        >&lt;= 256 Tiles</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_MB2' style='display:none'>
+        <td>Map Base</td><td>
+         <select name="MB2" onChange="upd()">
+          <option value="0" selected>Map Base 0</option>
+          <option value="1"         >Map Base 1</option>
+          <option value="2"         >Map Base 2</option>
+          <option value="3"         >Map Base 3</option>
+          <option value="4"         >Map Base 4</option>
+          <option value="5"         >Map Base 5</option>
+          <option value="6"         >Map Base 6</option>
+          <option value="7"         >Map Base 7</option>
+          <option value="8"         >Map Base 8</option>
+          <option value="9"         >Map Base 9</option>
+          <option value="10"        >Map Base 10</option>
+          <option value="11"        >Map Base 11</option>
+          <option value="12"        >Map Base 12</option>
+          <option value="13"        >Map Base 13</option>
+          <option value="14"        >Map Base 14</option>
+          <option value="15"        >Map Base 15</option>
+          <option value="16"        >Map Base 16</option>
+          <option value="17"        >Map Base 17</option>
+          <option value="18"        >Map Base 18</option>
+          <option value="19"        >Map Base 19</option>
+          <option value="20"        >Map Base 20</option>
+          <option value="21"        >Map Base 21</option>
+          <option value="22"        >Map Base 22</option>
+          <option value="23"        >Map Base 23</option>
+          <option value="24"        >Map Base 24</option>
+          <option value="25"        >Map Base 25</option>
+          <option value="26"        >Map Base 26</option>
+          <option value="27"        >Map Base 27</option>
+          <option value="28"        >Map Base 28</option>
+          <option value="29"        >Map Base 29</option>
+          <option value="30"        >Map Base 30</option>
+          <option value="31"        >Map Base 31</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_TB2' style='display:none'>
+        <td>Tile Base</td><td>
+         <select name="TB2" onChange="upd()">
+          <option value="0" selected>Tile Base 0</option>
+          <option value="1"         >Tile Base 1</option>
+          <option value="2"         >Tile Base 2</option>
+          <option value="3"         >Tile Base 3</option>
+          <option value="4"         >Tile Base 4</option>
+          <option value="5"         >Tile Base 5</option>
+          <option value="6"         >Tile Base 6</option>
+          <option value="7"         >Tile Base 7</option>
+          <option value="8"         >Tile Base 8</option>
+          <option value="9"         >Tile Base 9</option>
+          <option value="10"        >Tile Base 10</option>
+          <option value="11"        >Tile Base 11</option>
+          <option value="12"        >Tile Base 12</option>
+          <option value="13"        >Tile Base 13</option>
+          <option value="14"        >Tile Base 14</option>
+          <option value="15"        >Tile Base 15</option>
+         </select>
+        </td>
+       </tr>
+       <tr><td colspan="2"><div id="BG_DESC2" class="left"></div></td></tr>
+       <tr><td colspan="2" style="background:#777799"></td></tr>
+       <tr>
+        <td><b>Background 3</b></td><td>
+        <select name="T3" onChange="upd()">
+         <option value="NULL" selected>NULL</option>
+         <option value="Text8bpp"     >BgType_Text8bpp</option>
+         <option value="Text4bpp"     >BgType_Text4bpp</option>
+         <option value="Rotation"     >BgType_Rotation</option>
+         <option value="ExRotation"   >BgType_ExRotation</option>
+         <option value="Bmp8"         >BgType_Bmp8</option>
+         <option value="Bmp16"        >BgType_Bmp16</option>
+        </select>
+       </td></tr>
+       <tr id='BG_TS3' style='display:none'>
+        <td>Size</td><td>
+         <select name="TS3" onChange="upd()">
+          <option value="T_256x256" selected>BgSize_T_256x256</option>
+          <option value="T_512x256"         >BgSize_T_512x256</option>
+          <option value="T_256x512"         >BgSize_T_256x512</option>
+          <option value="T_512x512"         >BgSize_T_512x512</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_RS3' style='display:none'>
+        <td>Size</td><td>
+         <select name="RS3" onChange="upd()">
+          <option value="R_128x128" selected>BgSize_R_128x128</option>
+          <option value="R_256x256"         >BgSize_R_256x256</option>
+          <option value="R_512x512"         >BgSize_R_512x512</option>
+          <option value="R_1024x1024"       >BgSize_R_1024x1024</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_ERS3' style='display:none'>
+        <td>Size</td><td>
+         <select name="ERS3" onChange="upd()">
+          <option value="ER_128x128" selected>BgSize_ER_128x128</option>
+          <option value="ER_256x256"         >BgSize_ER_256x256</option>
+          <option value="ER_512x512"         >BgSize_ER_512x512</option>
+          <option value="ER_1024x1024"       >BgSize_ER_1024x1024</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_B8S3' style='display:none'>
+        <td>Size</td><td>
+         <select name="B8S3" onChange="upd()">
+          <option value="B8_128x128" selected>BgSize_B8_128x128</option>
+          <option value="B8_256x192"         >Note1: 256x192</option>
+          <option value="B8_256x256"         >BgSize_B8_256x256</option>
+          <option value="B8_512x256"         >BgSize_B8_512x256</option>
+          <option value="B8_512x512"         >BgSize_B8_512x512</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_B16S3' style='display:none'>
+        <td>Size</td><td>
+         <select name="B16S3" onChange="upd()">
+          <option value="B16_128x128" selected>BgSize_B16_128x128</option>
+          <option value="B16_256x192"         >Note1: 256x192</option>
+          <option value="B16_256x256"         >BgSize_B16_256x256</option>
+          <option value="B16_512x256"         >BgSize_B16_512x256</option>
+          <option value="B16_512x512"         >BgSize_B16_512x512</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_NT3' style='display:none'>
+        <td>Maximum Tiles</td><td>
+         <select name="NT3" onChange="upd()">
+          <option value="32" selected>&lt;= 32 Tiles</option>
+          <option value="64"         >&lt;= 64 Tiles</option>
+          <option value="96"         >&lt;= 96 Tiles</option>
+          <option value="128"        >&lt;= 128 Tiles</option>
+          <option value="160"        >&lt;= 160 Tiles</option>
+          <option value="192"        >&lt;= 192 Tiles</option>
+          <option value="224"        >&lt;= 224 Tiles</option>
+          <option value="256"        >&lt;= 256 Tiles</option>
+          <option value="288"        >&lt;= 288 Tiles</option>
+          <option value="320"        >&lt;= 320 Tiles</option>
+          <option value="352"        >&lt;= 352 Tiles</option>
+          <option value="384"        >&lt;= 384 Tiles</option>
+          <option value="416"        >&lt;= 416 Tiles</option>
+          <option value="448"        >&lt;= 448 Tiles</option>
+          <option value="480"        >&lt;= 480 Tiles</option>
+          <option value="512"        >&lt;= 512 Tiles</option>
+          <option value="544"        >&lt;= 544 Tiles</option>
+          <option value="576"        >&lt;= 576 Tiles</option>
+          <option value="608"        >&lt;= 608 Tiles</option>
+          <option value="640"        >&lt;= 640 Tiles</option>
+          <option value="672"        >&lt;= 672 Tiles</option>
+          <option value="704"        >&lt;= 704 Tiles</option>
+          <option value="736"        >&lt;= 736 Tiles</option>
+          <option value="768"        >&lt;= 768 Tiles</option>
+          <option value="800"        >&lt;= 800 Tiles</option>
+          <option value="832"        >&lt;= 832 Tiles</option>
+          <option value="864"        >&lt;= 864 Tiles</option>
+          <option value="896"        >&lt;= 896 Tiles</option>
+          <option value="928"        >&lt;= 928 Tiles</option>
+          <option value="960"        >&lt;= 960 Tiles</option>
+          <option value="992"        >&lt;= 992 Tiles</option>
+          <option value="1024"       >&lt;= 1024 Tiles</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_RNT3' style='display:none'>
+        <td>Maximum Tiles</td><td>
+         <select name="RNT3" onChange="upd()">
+          <option value="32" selected>&lt;= 32 Tiles</option>
+          <option value="64"         >&lt;= 64 Tiles</option>
+          <option value="96"         >&lt;= 96 Tiles</option>
+          <option value="128"        >&lt;= 128 Tiles</option>
+          <option value="160"        >&lt;= 160 Tiles</option>
+          <option value="192"        >&lt;= 192 Tiles</option>
+          <option value="224"        >&lt;= 224 Tiles</option>
+          <option value="256"        >&lt;= 256 Tiles</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_MB3' style='display:none'>
+        <td>Map Base</td><td>
+         <select name="MB3" onChange="upd()">
+          <option value="0" selected>Map Base 0</option>
+          <option value="1"         >Map Base 1</option>
+          <option value="2"         >Map Base 2</option>
+          <option value="3"         >Map Base 3</option>
+          <option value="4"         >Map Base 4</option>
+          <option value="5"         >Map Base 5</option>
+          <option value="6"         >Map Base 6</option>
+          <option value="7"         >Map Base 7</option>
+          <option value="8"         >Map Base 8</option>
+          <option value="9"         >Map Base 9</option>
+          <option value="10"        >Map Base 10</option>
+          <option value="11"        >Map Base 11</option>
+          <option value="12"        >Map Base 12</option>
+          <option value="13"        >Map Base 13</option>
+          <option value="14"        >Map Base 14</option>
+          <option value="15"        >Map Base 15</option>
+          <option value="16"        >Map Base 16</option>
+          <option value="17"        >Map Base 17</option>
+          <option value="18"        >Map Base 18</option>
+          <option value="19"        >Map Base 19</option>
+          <option value="20"        >Map Base 20</option>
+          <option value="21"        >Map Base 21</option>
+          <option value="22"        >Map Base 22</option>
+          <option value="23"        >Map Base 23</option>
+          <option value="24"        >Map Base 24</option>
+          <option value="25"        >Map Base 25</option>
+          <option value="26"        >Map Base 26</option>
+          <option value="27"        >Map Base 27</option>
+          <option value="28"        >Map Base 28</option>
+          <option value="29"        >Map Base 29</option>
+          <option value="30"        >Map Base 30</option>
+          <option value="31"        >Map Base 31</option>
+         </select>
+        </td>
+       </tr>
+       <tr id='BG_TB3' style='display:none'>
+        <td>Tile Base</td><td>
+         <select name="TB3" onChange="upd()">
+          <option value="0" selected>Tile Base 0</option>
+          <option value="1"         >Tile Base 1</option>
+          <option value="2"         >Tile Base 2</option>
+          <option value="3"         >Tile Base 3</option>
+          <option value="4"         >Tile Base 4</option>
+          <option value="5"         >Tile Base 5</option>
+          <option value="6"         >Tile Base 6</option>
+          <option value="7"         >Tile Base 7</option>
+          <option value="8"         >Tile Base 8</option>
+          <option value="9"         >Tile Base 9</option>
+          <option value="10"        >Tile Base 10</option>
+          <option value="11"        >Tile Base 11</option>
+          <option value="12"        >Tile Base 12</option>
+          <option value="13"        >Tile Base 13</option>
+          <option value="14"        >Tile Base 14</option>
+          <option value="15"        >Tile Base 15</option>
+         </select>
+        </td>
+       </tr>
+       <tr><td colspan="2"><div id="BG_DESC3" class="left"></div></td></tr>
+       <tr><td colspan="2" style="background:#777799"></td></tr>
+      </table>
+      <p>Default console font uses 128 tiles.<br />(Choose "&lt;= 128 Tiles")</p>
+      <p>Default keyboard uses 857 tiles.<br />(Choose "&lt;= 864 Tiles")</p>
+      <p>&nbsp;</p>
+      <h2>Function Call</h2>
+      <table style='width:320px'>
+       <thead>
+        <tr><td class='left'><input type="checkbox" name="FuncCallSub" value="yes" onClick="upd()">Generate for Sub Engine</td></tr>
+       </thead>
+       <tr><td class='left' id='FunctionCall'>Javascript must be enabled</td></tr>
+      </table>
+      <p>&nbsp;</p>
+      <table style='width:320px'>
+       <tr><td colspan=3 class="left">Legend</td></tr>
+       <tr><td class="g" style='width=32px'></td><td class="left">Okay!</td><td class="left"></td></tr>
+       <tr><td class="y" style='width=32px'></td><td class="left">Warning!</td><td class="left">Safe if shared tileset graphics</td></tr>
+       <tr><td class="r" style='width=32px'></td><td class="left">Error!</td><td class="left">You will definitely have corrupted graphics.<br>Additionally, zeromus will slap you.</td></tr>
+       <tr><td class="dr" style='width=32px'></td><td class="left">Outside<br />Range!</td><td class="left">Graphics falls outside the valid range.</td></tr>
+       <tr><td class="x" style='width=32px'></td><td class="left">Inaccessible</td><td class="left">Data here isn't accessed by the engine.</td></tr>
+       <tr><td class=""  style='width=32px'></td><td class="left">Empty</td><td class="left"></td></tr>
+      </table>
+     </td><td class='main'>
+      <div id="VRAMBGAlloc">
+       <div id='BGAllocationTable'>Javascript must be enabled</div>
+      </div>
+     </td></tr>
+    </table>
+   </form>
+   <hr />
+   <p>Copyright  2011-2012, mtheall &amp; JustBurn</p>
+  </div>
+ </body>
+</html>
