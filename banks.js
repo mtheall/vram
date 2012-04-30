@@ -210,7 +210,7 @@ var Sel = {'A':'', 'B':'', 'C':'', 'D':'', 'E':'', 'F':'', 'G':'', 'H':'', 'I':'
 var Err = {'A':'', 'B':'', 'C':'', 'D':'', 'E':'', 'F':'', 'G':'', 'H':'', 'I':''};
 
 function loadp() {
-  var allElem = document.forms["banks"].elements;
+  var i, allElem = document.forms["banks"].elements;
 
   // Load parameters
   Sel['A'] = getParameterByName('A');
@@ -224,25 +224,28 @@ function loadp() {
   Sel['I'] = getParameterByName('I');
 
   // Mark selected items
-  for (var el = 0; el < allElem.length; el++) {
-    Elem = allElem[el];
+  for (var i=0; i < allElem.length; i++) {
+    Elem = allElem[i];
     if (Sel[Elem.name] == Elem.value)
       Elem.checked = true;
   }
 
+  // Update
   upd();
 }
 
 function upd() {
   var allElem = document.forms["banks"].elements;
+  var i, a, b, ShareLink;
   var numerr = 0;
 
   // Find selected items
-  for (var el = 0; el < allElem.length; el++) {
-    Elem = allElem[el];
+  for (var i = 0; i < allElem.length; i++) {
+    Elem = allElem[i];
     ElemName = Elem.name + "_" + Elem.value;
-    if (Elem.checked)
+    if (Elem.checked) {
       Sel[Elem.name] = Elem.value;
+    }
   }
 
   // Detect errors
@@ -269,8 +272,8 @@ function upd() {
   }
 
   // Mark valid/conflicts on the table
-  for (var el = 0; el < allElem.length; el++) {
-    Elem = allElem[el];
+  for (var i=0; i < allElem.length; i++) {
+    Elem = allElem[i];
     ElemName = Elem.name + "_" + Elem.value;
     if (Elem.checked) {
       if (Err[Elem.name] == 0)
@@ -283,26 +286,14 @@ function upd() {
   }
 
   // Write result
-  linkcode  =  "A="+Sel['A'];
-  linkcode += "&B="+Sel['B'];
-  linkcode += "&C="+Sel['C'];
-  linkcode += "&D="+Sel['D'];
-  linkcode += "&E="+Sel['E'];
-  linkcode += "&F="+Sel['F'];
-  linkcode += "&G="+Sel['G'];
-  linkcode += "&H="+Sel['H'];
-  linkcode += "&I="+Sel['I'];
-
   Notify = document.getElementById('Notify');
-  Notify.innerHTML = "<a href='?" + linkcode + "'>(Share Link)</a> - ";
   if (numerr == 0) {
     Notify.style.color = "#008000";
-    Notify.innerHTML += "No conflict found ";
+    Notify.innerHTML = "No conflict found ";
   }
   else {
     Notify.style.color = "#C00000";
-    Notify.innerHTML += "Found " + numerr + " conflicts at banks: ";
-
+    Notify.innerHTML = "Found " + numerr + " conflicts at banks: ";
     if (Err['A']) Notify.innerHTML += "VRAM_A ";
     if (Err['B']) Notify.innerHTML += "VRAM_B ";
     if (Err['C']) Notify.innerHTML += "VRAM_C ";
@@ -345,5 +336,18 @@ function upd() {
   }
   else
     CPUAcc.innerHTML =  "Error: Conflict found!";
-}
 
+  // Generate sharing link
+  ShareLink = "";
+  if (Sel['A'] != "LCD") ShareLink += "&A=" + Sel['A'];
+  if (Sel['B'] != "LCD") ShareLink += "&B=" + Sel['B'];
+  if (Sel['C'] != "LCD") ShareLink += "&C=" + Sel['C'];
+  if (Sel['D'] != "LCD") ShareLink += "&D=" + Sel['D'];
+  if (Sel['E'] != "LCD") ShareLink += "&E=" + Sel['E'];
+  if (Sel['F'] != "LCD") ShareLink += "&F=" + Sel['F'];
+  if (Sel['G'] != "LCD") ShareLink += "&G=" + Sel['G'];
+  if (Sel['H'] != "LCD") ShareLink += "&H=" + Sel['H'];
+  if (Sel['I'] != "LCD") ShareLink += "&I=" + Sel['I'];
+  ShareLink = "?" + ShareLink.substring(1);
+  document.getElementById('ShareLink').innerHTML = "<a href=" + ShareLink + ">" + ShareLink + "</a>";
+}
