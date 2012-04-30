@@ -1,0 +1,441 @@
+<html>
+ <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+ <head>
+  <title>VRAM Banks</title>
+  <link rel="stylesheet" href="banks.css">
+  <script type="text/javascript" src="banks.js"></script>
+ </head>
+ <body onload="loadp()">
+  <h1 id='Notify'>None</h1>
+  <table class='main'>
+   <tr>
+    <td class='main' width='500px'>
+    <form name='banks'>
+     <table width='720px'>
+      <thead>
+       <tr>
+        <td rowspan='2' colspan='4' class='left'>Function</td>
+        <td colspan='9' class='left'>VRAM Bank</td>
+       </tr>
+       <tr>
+        <td>A 128KB</td>
+        <td>B 128KB</td>
+        <td>C 128KB</td>
+        <td>D 128KB</td>
+        <td>E 64KB</td>
+        <td>F 16KB</td>
+        <td>G 16KB</td>
+        <td>H 32KB</td>
+        <td>I 16KB</td>
+       </tr>
+      </thead>
+ 
+      <!-- LCD Mode - ARM9 Memory Mapped -->
+      <tr><td colspan='13' class='black' /></tr>
+      <tr>
+       <td colspan='4'>LCD</td>
+       <td id='A_LCD'><input type='radio' name='A' value='LCD' onClick="upd()" checked /></td>
+       <td id='B_LCD'><input type='radio' name='B' value='LCD' onClick="upd()" checked /></td>
+       <td id='C_LCD'><input type='radio' name='C' value='LCD' onClick="upd()" checked /></td>
+       <td id='D_LCD'><input type='radio' name='D' value='LCD' onClick="upd()" checked /></td>
+       <td id='E_LCD'><input type='radio' name='E' value='LCD' onClick="upd()" checked /></td>
+       <td id='F_LCD'><input type='radio' name='F' value='LCD' onClick="upd()" checked /></td>
+       <td id='G_LCD'><input type='radio' name='G' value='LCD' onClick="upd()" checked /></td>
+       <td id='H_LCD'><input type='radio' name='H' value='LCD' onClick="upd()" checked /></td>
+       <td id='I_LCD'><input type='radio' name='I' value='LCD' onClick="upd()" checked /></td>
+      </tr>
+  
+      <!-- ARM7 Mode - ARM7 Memory Mapped -->
+      <tr><td colspan='13' class='black' /></tr>
+      <tr>
+       <td colspan='4'>ARM7 Extra RAM (1st 128KB)</td>
+       <td rowspan='2' class='x' />
+       <td rowspan='2' class='x' />
+       <td id='C_ARM70'><input type='radio' name='C' value='ARM70' onClick="upd()" /></td>
+       <td id='D_ARM70'><input type='radio' name='D' value='ARM70' onClick="upd()" /></td>
+       <td rowspan='2' class='x' />
+       <td rowspan='2' class='x' />
+       <td rowspan='2' class='x' />
+       <td rowspan='2' class='x' />
+       <td rowspan='2' class='x' />
+      </tr>
+      <tr>
+       <td colspan='4'>ARM7 Extra RAM (2nd 128KB)</td>
+       <td id='C_ARM71'><input type='radio' name='C' value='ARM71' onClick="upd()" /></td>
+       <td id='D_ARM71'><input type='radio' name='D' value='ARM71' onClick="upd()" /></td>
+      </tr>
+  
+      <!-- Main 2D Engine -->
+      <tr><td colspan='13' class='black' /></tr>
+      <tr>
+       <td rowspan='25'>Main 2D Engine</td>
+       <td rowspan='11'>BG VRAM</td>
+       <td rowspan='8'>1st 128KB</td>
+       <td>1st 16KB</td>
+       <td rowspan='8' id='A_MBG0'><input type='radio' name='A' value='MBG0' onClick="upd()" /></td>
+       <td rowspan='8' id='B_MBG0'><input type='radio' name='B' value='MBG0' onClick="upd()" /></td>
+       <td rowspan='8' id='C_MBG0'><input type='radio' name='C' value='MBG0' onClick="upd()" /></td>
+       <td rowspan='8' id='D_MBG0'><input type='radio' name='D' value='MBG0' onClick="upd()" /></td>
+       <td rowspan='4' id='E_MBG'><input type='radio' name='E' value='MBG' onClick="upd()" /></td>
+       <td id='F_MBG00'><input type='radio' name='F' value='MBG00' onClick="upd()" /></td>
+       <td id='G_MBG00'><input type='radio' name='G' value='MBG00' onClick="upd()" /></td>
+       <td rowspan='11' class='x' />
+       <td rowspan='11' class='x' />
+      </tr>
+      <tr>
+       <td>2nd 16KB</td>
+       <td id='F_MBG01'><input type='radio' name='F' value='MBG01' onClick="upd()" /></td>
+       <td id='G_MBG01'><input type='radio' name='G' value='MBG01' onClick="upd()" /></td>
+      </tr>
+      <tr>
+       <td>3rd 16KB</td>
+       <td rowspan='2' class='x' />
+       <td rowspan='2' class='x' />
+      </tr>
+      <tr>
+       <td>4th 16KB</td>
+      </tr>
+      <tr>
+       <td>5th 16KB</td>
+       <td rowspan='7' class='x'/>
+       <td id='F_MBG02'><input type='radio' name='F' value='MBG02' onClick="upd()" /></td>
+       <td id='G_MBG02'><input type='radio' name='G' value='MBG02' onClick="upd()" /></td>
+      </tr>
+      <tr>
+       <td>6th 16KB</td>
+       <td id='F_MBG03'><input type='radio' name='F' value='MBG03' onClick="upd()" /></td>
+       <td id='G_MBG03'><input type='radio' name='G' value='MBG03' onClick="upd()" /></td>
+      </tr>
+      <tr>
+       <td>7th 16KB</td>
+       <td rowspan='5' class='x' />
+       <td rowspan='5' class='x' />
+      </tr>
+      <tr>
+       <td>8th 16KB</td>
+      </tr>
+      <tr>
+       <td>2nd 128KB</td>
+       <td>All 128KB</td>
+       <td id='A_MBG1'><input type='radio' name='A' value='MBG1' onClick="upd()" /></td>
+       <td id='B_MBG1'><input type='radio' name='B' value='MBG1' onClick="upd()" /></td>
+       <td id='C_MBG1'><input type='radio' name='C' value='MBG1' onClick="upd()" /></td>
+       <td id='D_MBG1'><input type='radio' name='D' value='MBG1' onClick="upd()" /></td>
+      </tr>
+      <tr>
+       <td>3rd 128KB</td>
+       <td>All 128KB</td>
+       <td id='A_MBG2'><input type='radio' name='A' value='MBG2' onClick="upd()" /></td>
+       <td id='B_MBG2'><input type='radio' name='B' value='MBG2' onClick="upd()" /></td>
+       <td id='C_MBG2'><input type='radio' name='C' value='MBG2' onClick="upd()" /></td>
+       <td id='D_MBG2'><input type='radio' name='D' value='MBG2' onClick="upd()" /></td>
+      </tr>
+      <tr>
+       <td>4th 128KB</td>
+       <td>All 128KB</td>
+       <td id='A_MBG3'><input type='radio' name='A' value='MBG3' onClick="upd()" /></td>
+       <td id='B_MBG3'><input type='radio' name='B' value='MBG3' onClick="upd()" /></td>
+       <td id='C_MBG3'><input type='radio' name='C' value='MBG3' onClick="upd()" /></td>
+       <td id='D_MBG3'><input type='radio' name='D' value='MBG3' onClick="upd()" /></td>
+      </tr>
+      <tr>
+       <td rowspan='9'>OBJ VRAM</td>
+       <td rowspan='8'>1st 128KB</td>
+       <td>1st 16KB</td>
+       <td rowspan='8' id='A_MOBJ0'><input type='radio' name='A' value='MOBJ0' onClick="upd()" /></td>
+       <td rowspan='8' id='B_MOBJ0'><input type='radio' name='B' value='MOBJ0' onClick="upd()" /></td>
+       <td rowspan='9' class='x' />
+       <td rowspan='9' class='x' />
+       <td rowspan='4' id='E_MOBJ'><input type='radio' name='E' value='MOBJ' onClick="upd()" /></td>
+       <td id='F_MOBJ00'><input type='radio' name='F' value='MOBJ00' onClick="upd()" /></td>
+       <td id='G_MOBJ00'><input type='radio' name='G' value='MOBJ00' onClick="upd()" /></td>
+       <td rowspan='9' class='x' />
+       <td rowspan='9' class='x' />
+      </tr>
+      <tr>
+       <td>2nd 16KB</td>
+       <td id='F_MOBJ01'><input type='radio' name='F' value='MOBJ01' onClick="upd()" /></td>
+       <td id='G_MOBJ01'><input type='radio' name='G' value='MOBJ01' onClick="upd()" /></td>
+      </tr>
+      <tr>
+       <td>3rd 16KB</td>
+       <td rowspan='2' class='x' />
+       <td rowspan='2' class='x' />
+      </tr>
+      <tr>
+       <td>4th 16KB</td>
+      </tr>
+      <tr>
+       <td>5th 16KB</td>
+       <td rowspan='5' class='x' />
+       <td id='F_MOBJ02'><input type='radio' name='F' value='MOBJ02' onClick="upd()" /></td>
+       <td id='G_MOBJ02'><input type='radio' name='G' value='MOBJ02' onClick="upd()" /></td>
+      </tr>
+      <tr>
+       <td>6th 16KB</td>
+       <td id='F_MOBJ03'><input type='radio' name='F' value='MOBJ03' onClick="upd()" /></td>
+       <td id='G_MOBJ03'><input type='radio' name='G' value='MOBJ03' onClick="upd()" /></td>
+      </tr>
+      <tr>
+       <td>7th 16KB</td>
+       <td rowspan='3' class='x' />
+       <td rowspan='3' class='x' />
+      </tr>
+      <tr>
+       <td>8th 16KB</td>
+      </tr>
+      <tr>
+       <td>2nd 128KB</td>
+       <td>All 128KB</td>
+       <td id='A_MOBJ1'><input type='radio' name='A' value='MOBJ1' onClick="upd()" /></td>
+       <td id='B_MOBJ1'><input type='radio' name='B' value='MOBJ1' onClick="upd()" /></td>
+      </tr>
+      <tr>
+       <td rowspan='4'>BG Ext Palette</td>
+       <td>Slot 0</td>
+       <td>8KB</td>
+       <td rowspan='4' class='x' />
+       <td rowspan='4' class='x' />
+       <td rowspan='4' class='x' />
+       <td rowspan='4' class='x' />
+       <td rowspan='4' id='E_BGEPAL'><input type='radio' name='E' value='BGEPAL'   onClick="upd()" /></td>
+       <td rowspan='2' id='F_BGEPAL01'><input type='radio' name='F' value='BGEPAL01' onClick="upd()" /></td>
+       <td rowspan='2' id='G_BGEPAL01'><input type='radio' name='G' value='BGEPAL01' onClick="upd()" /></td>
+       <td rowspan='4' class='x' />
+       <td rowspan='4' class='x' />
+      </tr>
+      <tr>
+       <td>Slot 1</td>
+       <td>8KB</td>
+      </tr>
+      <tr>
+       <td>Slot 2</td>
+       <td>8KB</td>
+       <td rowspan='2' id='F_BGEPAL23'><input type='radio' name='F' value='BGEPAL23' onClick="upd()" /></td>
+       <td rowspan='2' id='G_BGEPAL23'><input type='radio' name='G' value='BGEPAL23' onClick="upd()" /></td>
+      </tr>
+      <tr>
+       <td>Slot 3</td>
+       <td>8KB</td>
+      </tr>
+      <tr>
+       <td>OBJ Ext Palette</td>
+       <td colspan='2'>8KB</td>
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td id='F_OBJEPAL'><input type='radio' name='F' value='OBJEPAL' onClick="upd()" /></td>
+       <td id='G_OBJEPAL'><input type='radio' name='G' value='OBJEPAL' onClick="upd()" /></td>
+       <td class='x' />
+       <td class='x' />
+      </tr>
+  
+      <!-- Sub 2D Engine -->
+      <tr><td colspan='13' class='black' /></tr>
+      <tr>
+       <td rowspan='12'>Sub 2D Engine</td>
+       <td rowspan='8'>BG VRAM</td>
+       <td rowspan='8'>128KB</td>
+       <td>1st 16KB</td>
+       <td rowspan='8' class='x' />
+       <td rowspan='8' class='x' />
+       <td rowspan='8' id='C_SBG'><input type='radio' name='C' value='SBG' onClick="upd()" /></td>
+       <td rowspan='8' class='x' />
+       <td rowspan='8' class='x' />
+       <td rowspan='8' class='x' />
+       <td rowspan='8' class='x' />
+       <td rowspan='2' id='H_SBG0'><input type='radio' name='H' value='SBG0' onClick="upd()" /></td>
+       <td rowspan='2' class='x' />
+      </tr>
+      <tr>
+       <td>2nd 16KB</td>
+      </tr>
+      <tr>
+       <td>3rd 16KB</td>
+       <td rowspan='6' class='x' />
+       <td id='I_SBG1'><input type='radio' name='I' value='SBG1' onClick="upd()" /></td>
+      </tr>
+      <tr>
+       <td>4th 16KB</td>
+       <td rowspan='5' class='x' />
+      </tr>
+      <tr>
+       <td>5th 16KB</td>
+      </tr>
+      <tr>
+       <td>6th 16KB</td>
+      </tr>
+      <tr>
+       <td>7th 16KB</td>
+      </tr>
+      <tr>
+       <td>8th 16KB</td>
+      </tr>
+      <tr>
+       <td rowspan='2'>OBJ VRAM</td>
+       <td rowspan='2'>128KB</td>
+       <td>1st 16KB</td>
+       <td rowspan='2' class='x' />
+       <td rowspan='2' class='x' />
+       <td rowspan='2' class='x' />
+       <td rowspan='2' id='D_SOBJ'><input type='radio' name='D' value='SOBJ' onClick="upd()" /></td>
+       <td rowspan='2' class='x' />
+       <td rowspan='2' class='x' />
+       <td rowspan='2' class='x' />
+       <td rowspan='2' class='x' />
+       <td id='I_SOBJ'><input type='radio' name='I' value='SOBJ' onClick="upd()" /></td>
+      </tr>
+      <tr>
+       <td>Final 112KB</td>
+       <td class='x' />
+      </tr>
+      <tr>
+       <td>BG Ext Palette</td>
+       <td colspan='2'>32KB</td>
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td id='H_SBGEPAL'><input type='radio' name='H' value='SBGEPAL' onClick="upd()" /></td>
+       <td class='x' />
+      </tr>
+      <tr>
+       <td>OBJ Ext Palette</td>
+       <td colspan='2'>8KB</td>
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td id='I_SOBJEPAL'><input type='radio' name='I' value='SOBJEPAL' onClick="upd()" /></td>
+      </tr>
+  
+      <!-- 3D Engine -->
+      <tr><td colspan='13' class='black'></td></tr>
+      <tr>
+       <td rowspan='10'>3D Engine</td>
+       <td rowspan='4'>Texture</td>
+       <td>Slot 0</td>
+       <td>128KB</td>
+       <td id='A_TS0'><input type='radio' name='A' value='TS0' onClick="upd()" /></td>
+       <td id='B_TS0'><input type='radio' name='B' value='TS0' onClick="upd()" /></td>
+       <td id='C_TS0'><input type='radio' name='C' value='TS0' onClick="upd()" /></td>
+       <td id='D_TS0'><input type='radio' name='D' value='TS0' onClick="upd()" /></td>
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+      </tr>
+      <tr>
+       <td>Slot 1</td>
+       <td>128KB</td>
+       <td id='A_TS1'><input type='radio' name='A' value='TS1' onClick="upd()" /></td>
+       <td id='B_TS1'><input type='radio' name='B' value='TS1' onClick="upd()" /></td>
+       <td id='C_TS1'><input type='radio' name='C' value='TS1' onClick="upd()" /></td>
+       <td id='D_TS1'><input type='radio' name='D' value='TS1' onClick="upd()" /></td>
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+      </tr>
+      <tr>
+       <td>Slot 2</td>
+       <td>128KB</td>
+       <td id='A_TS2'><input type='radio' name='A' value='TS2' onClick="upd()" /></td>
+       <td id='B_TS2'><input type='radio' name='B' value='TS2' onClick="upd()" /></td>
+       <td id='C_TS2'><input type='radio' name='C' value='TS2' onClick="upd()" /></td>
+       <td id='D_TS2'><input type='radio' name='D' value='TS2' onClick="upd()" /></td>
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+      </tr>
+      <tr>
+       <td>Slot 3</td>
+       <td>128KB</td>
+       <td id='A_TS3'><input type='radio' name='A' value='TS3' onClick="upd()" /></td>
+       <td id='B_TS3'><input type='radio' name='B' value='TS3' onClick="upd()" /></td>
+       <td id='C_TS3'><input type='radio' name='C' value='TS3' onClick="upd()" /></td>
+       <td id='D_TS3'><input type='radio' name='D' value='TS3' onClick="upd()" /></td>
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+       <td class='x' />
+      </tr>
+      <tr>
+       <td rowspan='6'>Texture Palette</td>
+       <td>Slot 0</td>
+       <td>16KB</td>
+       <td rowspan='6' class='x' />
+       <td rowspan='6' class='x' />
+       <td rowspan='6' class='x' />
+       <td rowspan='6' class='x' />
+       <td rowspan='4' id='E_TPAL'><input type='radio' name='E' value='TPAL' onClick="upd()" /></td>
+       <td id='F_TPAL0'><input type='radio' name='F' value='TPAL0' onClick="upd()" /></td>
+       <td id='G_TPAL0'><input type='radio' name='G' value='TPAL0' onClick="upd()" /></td>
+       <td rowspan='6' class='x' />
+       <td rowspan='6' class='x' />
+      </tr>
+      <tr>
+       <td>Slot 1</td>
+       <td>16KB</td>
+       <td id='F_TPAL1'><input type='radio' name='F' value='TPAL1' onClick="upd()" /></td>
+       <td id='G_TPAL1'><input type='radio' name='G' value='TPAL1' onClick="upd()" /></td>
+      </tr>
+      <tr>
+       <td>Slot 2</td>
+       <td>16KB</td>
+       <td rowspan='2' class='x' />
+       <td rowspan='2' class='x' />
+      </tr>
+      <tr>
+       <td>Slot 3</td>
+       <td>16KB</td>
+      </tr>
+      <tr>
+       <td>Slot 4</td>
+       <td>16KB</td>
+       <td rowspan='2' class='x' />
+       <td id='F_TPAL4'><input type='radio' name='F' value='TPAL4' onClick="upd()" /></td>
+       <td id='G_TPAL4'><input type='radio' name='G' value='TPAL4' onClick="upd()" /></td>
+      </tr>
+      <tr>
+       <td>Slot 5</td>
+       <td>16KB</td>
+       <td id='F_TPAL5'><input type='radio' name='F' value='TPAL5' onClick="upd()" /></td>
+       <td id='G_TPAL5'><input type='radio' name='G' value='TPAL5' onClick="upd()" /></td>
+      </tr>
+     </table>
+    </form>
+   </td>
+   <td class='main'>
+    <table>
+     <thead>
+      <tr><td class='left'>Function call</td></tr>
+     </thead>
+     <tr><td class='left' id='FunctionCall'>Javascript must be enabled</td></tr>
+    </table>
+    <p>&nbsp;</p>
+    <table>
+     <thead>
+      <tr><td class='left'>CPU Access</td></tr>
+     </thead>
+     <tr><td class='left' id='CPUAccess'>Javascript must be enabled</td></tr>
+    </table>
+    <p>Copyright © 2011-2012, mtheall &amp; JustBurn</p>
+   </td>
+  </tr></table>
+ </body>
+</html>
