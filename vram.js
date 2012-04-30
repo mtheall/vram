@@ -27,17 +27,15 @@ function V2Digits(size) {
 var DISPCNT_MapBase = 0;
 var DISPCNT_TileBase = 0;
 
-// &0 = Area valid
-// &8 = Area invalid
-// --
-// +0 = Empty
-// +1 = Valid (Tileset)
-// +2 = Valid (Bitmap)
-// +3 = Warning
-// +4 = Error
+// 0 = Empty
+// 1 = Valid (Tileset)
+// 2 = Valid (Bitmap)
+// 3 = Warning
+// 4 = Error
+// 5 = Out of range empty
+// 6 = Out of range error
 var ColorCode = [
-  "#DFDFFF", "#00FF00", "#00FF00", "#FFFF00", "#FF0000", "black", "black", "black",
-  "#777777", "#408000", "#408000", "#808000", "#800000", "black", "black", "black"
+  "#DFDFFF", "#00FF00", "#00FF00", "#FFFF00", "#FF0000", "#777777", "#804000"
 ];
 var WorkModes = [
   0,  0,  0,  1,  3, 3, 3, -1,
@@ -56,7 +54,7 @@ var VRAM_BGSpace = Array();
 var BGType_TSiz = [1, 2, 2, 4];
 var BGType_RSiz = [0.125, 1, 2, 8];
 var BGType_ERSiz = [0.25, 1, 4, 16];
-var BGType_B8Siz = [8, 24, 32, 64, 128];
+var BGType_B8Siz = [8, 24, 32, 64, 128, 256, 256];
 var BGType_B16Siz = [16, 48, 64, 128, 256];
 
 var ShareLink;
@@ -119,14 +117,14 @@ function bg_alloc_from(bgnum, bgtype, size, maxtiles, mapbase, tilebase) {
     sz = Math.ceil(sz_t);
     for (i=0; i<sz; i++) {
       j = (DISPCNT_TileBase * 32) + (tilebase * 8) + i;
-      if ((j >= 0) && (j < 256)) VRAM_BGMapping[bgnum][j]++;
+      if ((j >= 0) && (j < 257)) VRAM_BGMapping[bgnum][j] = 1;
     }
 
     sz_m = BGType_TSiz[size];
     sz = Math.ceil(sz_m);
     for (i=0; i<sz; i++) {
       j = (DISPCNT_MapBase * 32) + mapbase + i;
-      if ((j >= 0) && (j < 256)) VRAM_BGMapping[bgnum+1][j]++;
+      if ((j >= 0) && (j < 257)) VRAM_BGMapping[bgnum+1][j] = 1;
     }
   }
   else if (bgtype == 2) {
@@ -134,14 +132,14 @@ function bg_alloc_from(bgnum, bgtype, size, maxtiles, mapbase, tilebase) {
     sz = Math.ceil(sz_t);
     for (i=0; i<sz; i++) {
       j = (DISPCNT_TileBase * 32) + (tilebase * 8) + i;
-      if ((j >= 0) && (j < 256)) VRAM_BGMapping[bgnum][j]++;
+      if ((j >= 0) && (j < 257)) VRAM_BGMapping[bgnum][j] = 1;
     }
 
     sz_m = BGType_TSiz[size];
     sz = Math.ceil(sz_m);
     for (i=0; i<sz; i++) {
       j = (DISPCNT_MapBase * 32) + mapbase + i;
-      if ((j >= 0) && (j < 256)) VRAM_BGMapping[bgnum+1][j]++;
+      if ((j >= 0) && (j < 257)) VRAM_BGMapping[bgnum+1][j] = 1;
     }
   }
   else if (bgtype == 3) {
@@ -149,14 +147,14 @@ function bg_alloc_from(bgnum, bgtype, size, maxtiles, mapbase, tilebase) {
     sz = Math.ceil(sz_t);
     for (i=0; i<sz; i++) {
       j = (DISPCNT_TileBase * 32) + (tilebase * 8) + i;
-      if ((j >= 0) && (j < 256)) VRAM_BGMapping[bgnum][j]++;
+      if ((j >= 0) && (j < 257)) VRAM_BGMapping[bgnum][j] = 1;
     }
 
     sz_m = BGType_RSiz[size];
     sz = Math.ceil(sz_m);
     for (i=0; i<sz; i++) {
       j = (DISPCNT_MapBase * 32) + mapbase + i;
-      if ((j >= 0) && (j < 256)) VRAM_BGMapping[bgnum+1][j]++;
+      if ((j >= 0) && (j < 257)) VRAM_BGMapping[bgnum+1][j] = 1;
     }
   }
   else if (bgtype == 4) {
@@ -164,14 +162,14 @@ function bg_alloc_from(bgnum, bgtype, size, maxtiles, mapbase, tilebase) {
     sz = Math.ceil(sz_t);
     for (i=0; i<sz; i++) {
       j = (DISPCNT_TileBase * 32) + (tilebase * 8) + i;
-      if ((j >= 0) && (j < 256)) VRAM_BGMapping[bgnum][j]++;
+      if ((j >= 0) && (j < 257)) VRAM_BGMapping[bgnum][j] = 1;
     }
 
     sz_m = BGType_ERSiz[size];
     sz = Math.ceil(sz_m);
     for (i=0; i<sz; i++) {
       j = (DISPCNT_MapBase * 32) + mapbase + i;
-      if ((j >= 0) && (j < 256)) VRAM_BGMapping[bgnum+1][j]++;
+      if ((j >= 0) && (j < 257)) VRAM_BGMapping[bgnum+1][j] = 1;
     }
   }
   else if (bgtype == 5) {
@@ -179,7 +177,7 @@ function bg_alloc_from(bgnum, bgtype, size, maxtiles, mapbase, tilebase) {
     sz = Math.ceil(sz_t);
     for (i=0; i<sz; i++) {
       j = (DISPCNT_MapBase * 32) + (mapbase * 8) + i;
-      if ((j >= 0) && (j < 256)) VRAM_BGMapping[bgnum][j]+=2;
+      if ((j >= 0) && (j < 257)) VRAM_BGMapping[bgnum][j] = 2;
     }
 
     sz_m = 0;
@@ -189,7 +187,7 @@ function bg_alloc_from(bgnum, bgtype, size, maxtiles, mapbase, tilebase) {
     sz = Math.ceil(sz_t);
     for (i=0; i<sz; i++) {
       j = (DISPCNT_MapBase * 32) + (mapbase * 8) + i;
-      if ((j >= 0) && (j < 256)) VRAM_BGMapping[bgnum][j]+=2;
+      if ((j >= 0) && (j < 257)) VRAM_BGMapping[bgnum][j] = 2;
     }
 
     sz_m = 0;
@@ -206,17 +204,15 @@ function bg_alloc_conflict() {
     numweight = 0;
     for (bg=0; bg<8; bg+=2) {
       // Mark weight
-      if ((VRAM_BGMapping[bg][i] & 7) == 1) numweight++;
-      if ((VRAM_BGMapping[bg][i] & 7) >= 2) numweight += numweight+1;
-      if ((VRAM_BGMapping[bg+1][i] & 7) != 0) numweight += 2;
-      if (VRAM_BGMapping[bg][i] > 8) numweight += 4;
-      if (VRAM_BGMapping[bg+1][i] > 8) numweight += 4;
+      if (VRAM_BGMapping[bg][i] == 1) numweight++;
+      if (VRAM_BGMapping[bg][i] >= 2) numweight += numweight+1;
+      if (VRAM_BGMapping[bg+1][i] != 0) numweight += 2;
     }
     if (numweight == 2) {
       // Mark warnings
       for (bg=0; bg<8; bg+=2) {
-        if ((VRAM_BGMapping[bg][i] & 7) > 0) {
-          VRAM_BGMapping[bg][i] = (VRAM_BGMapping[bg][i] & 8) + 3;
+        if (VRAM_BGMapping[bg][i] > 0) {
+          VRAM_BGMapping[bg][i] = 3;
           ret = 2;
         }
       }
@@ -224,11 +220,19 @@ function bg_alloc_conflict() {
     if (numweight >= 3) {
       // Mark errors
       for (bg=0; bg<8; bg+=2) {
-        if ((VRAM_BGMapping[bg][i] & 7) > 0) VRAM_BGMapping[bg][i] = (VRAM_BGMapping[bg][i] & 8) + 4;
-        if ((VRAM_BGMapping[bg+1][i] & 7) > 0) VRAM_BGMapping[bg+1][i] = (VRAM_BGMapping[bg+1][i] & 8) + 4;
+        if (VRAM_BGMapping[bg][i] > 0) VRAM_BGMapping[bg][i] = 4;
+        if (VRAM_BGMapping[bg+1][i] > 0) VRAM_BGMapping[bg+1][i] = 4;
       }
       VRAM_BGError[i] = 1;
       ret = 3;
+    }
+  }
+  VRAM_BGError[256] = 0;
+  for (bg=0; bg<8; bg++) {
+    if (VRAM_BGMapping[bg][256] > 0) {
+      // Mark out of range
+      VRAM_BGError[256] = 1;
+      ret = 4;
     }
   }
   return ret;
@@ -237,7 +241,8 @@ function bg_alloc_conflict() {
 function bg_allocation() {
   var i, sz, szopt, maxtiles, mapbase, tilebase;
   var bgtype0, bgtype1, bgtype2, bgtype3;
-  var wmode, funccallsub;
+  var wmode, funccallsub, a, b;
+  var largebitmap = false;
 
   // Set DISPCNT offsets
   DISPCNT_MapBase = document.forms['bgvram'].MS.options.selectedIndex;
@@ -247,19 +252,15 @@ function bg_allocation() {
   funccallsub = document.forms['bgvram'].FuncCallSub.checked;
 
   // Setup array
-  for (i=0; i<256; i++) {
-    a = -(DISPCNT_TileBase * 4) + (i / 8);
-    a = ((a >= 0) && (a < 16)) ? 0 : 8;
-    b = -(DISPCNT_MapBase * 32) + i;
-    b = ((b >= 0) && (b < 32)) ? 0 : 8;
-    VRAM_BGMapping[0][i] = a;
-    VRAM_BGMapping[1][i] = b;
-    VRAM_BGMapping[2][i] = a;
-    VRAM_BGMapping[3][i] = b;
-    VRAM_BGMapping[4][i] = a;
-    VRAM_BGMapping[5][i] = b;
-    VRAM_BGMapping[6][i] = a;
-    VRAM_BGMapping[7][i] = b;
+  for (i=0; i<257; i++) {
+    VRAM_BGMapping[0][i] = 0;
+    VRAM_BGMapping[1][i] = 0;
+    VRAM_BGMapping[2][i] = 0;
+    VRAM_BGMapping[3][i] = 0;
+    VRAM_BGMapping[4][i] = 0;
+    VRAM_BGMapping[5][i] = 0;
+    VRAM_BGMapping[6][i] = 0;
+    VRAM_BGMapping[7][i] = 0;
   }
   for (i=0; i<8; i++) VRAM_BGSpace[i] = 0;
 
@@ -459,7 +460,15 @@ function bg_allocation() {
     ShareLink += "&S2=" + sz;
     if (funccallsub) Function_Call += "bgInitSub(2"; else Function_Call += "bgInit(2";
     Function_Call += ", BgType_" + document.forms['bgvram'].T2.options[document.forms['bgvram'].T2.options.selectedIndex].value;
-    Function_Call += ", BgSize_" + szopt[szopt.selectedIndex].value + ", " + mapbase + ", " + tilebase + ");<br />";
+    if (szopt[szopt.selectedIndex].value == 'B8_256x192')
+      Function_Call += ", BgSize_B8_256x256";
+    else if (szopt[szopt.selectedIndex].value == 'B16_256x192')
+      Function_Call += ", BgSize_B16_256x256";
+    else
+      Function_Call += ", BgSize_" + szopt[szopt.selectedIndex].value;
+    if ((szopt[szopt.selectedIndex].value == 'B8_512x1024') || (szopt[szopt.selectedIndex].value == 'B8_1024x512')) largebitmap = true;
+    Function_Call += ", " + mapbase + ", " + tilebase + ");<br />";
+    if (funccallsub) Function_Call += "// Error! Large bitmap isn't supported on Sub Engine";
   }
   bg_alloc_from(2, bgtype2, sz, maxtiles, mapbase, tilebase);
 
@@ -515,7 +524,13 @@ function bg_allocation() {
     ShareLink += "&S3=" + sz;
     if (funccallsub) Function_Call += "bgInitSub(3"; else Function_Call += "bgInit(3";
     Function_Call += ", BgType_" + document.forms['bgvram'].T3.options[document.forms['bgvram'].T3.options.selectedIndex].value;
-    Function_Call += ", BgSize_" + szopt[szopt.selectedIndex].value + ", " + mapbase + ", " + tilebase + ");<br />";
+    if (szopt[szopt.selectedIndex].value == 'B8_256x192')
+      Function_Call += ", BgSize_B8_256x256";
+    else if (szopt[szopt.selectedIndex].value == 'B16_256x192')
+      Function_Call += ", BgSize_B16_256x256";
+    else
+      Function_Call += ", BgSize_" + szopt[szopt.selectedIndex].value;
+    Function_Call += ", " + mapbase + ", " + tilebase + ");<br />";
   }
   bg_alloc_from(3, bgtype3, sz, maxtiles, mapbase, tilebase);
 
@@ -545,9 +560,17 @@ function bg_allocation() {
     case 1: document.getElementById('Mapping_Status').innerHTML = "VRAM BG Allocation okay!"; break;
     case 2: document.getElementById('Mapping_Status').innerHTML = "<i>Warning:</i> VRAM BG Allocation has some warnings, ignore if gfx has shared tileset graphics."; break;
     case 3: document.getElementById('Mapping_Status').innerHTML = "<b>Error:</b> VRAM BG Allocation has errors."; break;
+    case 4: document.getElementById('Mapping_Status').innerHTML = "<b>Error:</b> VRAM BG Allocation is outside the range."; break;
   }
 
   wmode = WorkModes[bgtype3 + bgtype2*8];
+  if (largebitmap) {
+    if ((bgtype0 == 0) && (bgtype1 == 0) && (bgtype3 == 0))
+      wmode = 6;
+    else
+      wmode = -1;
+  }
+
   if (wmode < 0) {
     document.getElementById('Recommended_Mode').innerHTML = "<b>Error:</b> Invalid background type combination!";
     document.getElementById('Working_Engines').innerHTML = "<b>Error:</b> Combination won't work on hardware!";
@@ -561,7 +584,7 @@ function bg_allocation() {
       document.getElementById('Working_Engines').innerHTML = "Works for Main Engine only!<br />For Sub Engine map, use DISPCNT 64KB steps of 0.";
   }
 
-  if ((wmode >= 0) && (bgcstatus != 3) ) {
+  if ((wmode >= 0) && (bgcstatus < 3) ) {
     document.getElementById('Report').innerHTML = "All options valid.";
     document.getElementById('Report').style.color = "#00A000";
   }
@@ -585,7 +608,13 @@ function bg_allocation_table() {
   table.appendChild(tr);
   for (i=0; i<256; i++) {
     tr = document.createElement('TR');
-    table.appendChild(tr);
+
+    // Boundary
+    if (((i % 64) == 0) && (i != 0)) {
+      tr.innerHTML = "<td colspan='11'>" + (i*2) + "KiB Boundary</td>";
+      table.appendChild(tr);
+      tr = document.createElement('TR');
+    }
 
     // Tile Base
     if ((i % 8) == 0) {
@@ -623,7 +652,34 @@ function bg_allocation_table() {
       td.style.backgroundColor = ColorCode[VRAM_BGMapping[j][i]];
       tr.appendChild(td);
     }
+
+    table.appendChild(tr);
   }
+
+  // Last boundary
+  tr = document.createElement('TR');
+  tr.innerHTML = "<td colspan='11'>" + (i*2) + "KiB Boundary</td>";
+
+  table.appendChild(tr);
+
+  // Out of range cells
+  tr = document.createElement('TR');
+  td = document.createElement('TD');
+  td.innerHTML = "Out of range";
+  td.colSpan = 3;
+  tr.appendChild(td);
+  if (VRAM_BGError[256]) td.style.backgroundColor = "#DFAFAF";
+  for (j=0; j<8; j++) {
+    td = document.createElement('TD');
+    if (VRAM_BGMapping[j][256] == 0)
+      td.style.backgroundColor = ColorCode[5];
+    else
+      td.style.backgroundColor = ColorCode[6];
+    tr.appendChild(td);
+  }
+  table.appendChild(tr);
+
+  // Add table
   tableid.appendChild(table);
 }
 
