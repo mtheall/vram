@@ -1,4 +1,5 @@
-function getParameterByName(name) {
+function getParameterByName(name)
+{
   name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
   var regex = new RegExp("[\\#&]" + name + "=([^&#]*)");
   var results = regex.exec(window.location.hash);
@@ -8,7 +9,8 @@ function getParameterByName(name) {
     return decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-function hasParameterByName(name) {
+function hasParameterByName(name)
+{
   name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
   var regex = new RegExp("[\\#&]" + name + "=([^&#]*)");
   var results = regex.exec(window.location.hash);
@@ -18,7 +20,8 @@ function hasParameterByName(name) {
     return true;
 }
 
-function V2Digits(size) {
+function V2Digits(size)
+{
   return Math.round(size * 100) / 100;
 }
 
@@ -61,7 +64,8 @@ var Function_Call;
 var CPU_Access;
 var MaxAllocated;
 
-function loadp() {
+function loadp()
+{
   var i, j;
 
   // Initialize 2D array
@@ -85,7 +89,8 @@ function loadp() {
   if (hasParameterByName('NT2')) document.forms['bgvram'].NT2.options.selectedIndex = (getParameterByName('NT2') / 32) - 1;
   if (hasParameterByName('MB2')) document.forms['bgvram'].MB2.options.selectedIndex = getParameterByName('MB2');
   if (hasParameterByName('TB2')) document.forms['bgvram'].TB2.options.selectedIndex = getParameterByName('TB2');
-  if (hasParameterByName('S2')) {
+  if (hasParameterByName('S2'))
+  {
     document.forms['bgvram'].TS2.options.selectedIndex = getParameterByName('S2');
     document.forms['bgvram'].RS2.options.selectedIndex = getParameterByName('S2');
     document.forms['bgvram'].ERS2.options.selectedIndex = getParameterByName('S2');
@@ -96,7 +101,8 @@ function loadp() {
   if (hasParameterByName('NT3')) document.forms['bgvram'].NT3.options.selectedIndex = (getParameterByName('NT3') / 32) - 1;
   if (hasParameterByName('MB3')) document.forms['bgvram'].MB3.options.selectedIndex = getParameterByName('MB3');
   if (hasParameterByName('TB3')) document.forms['bgvram'].TB3.options.selectedIndex = getParameterByName('TB3');
-  if (hasParameterByName('S3')) {
+  if (hasParameterByName('S3'))
+  {
     document.forms['bgvram'].TS3.options.selectedIndex = getParameterByName('S3');
     document.forms['bgvram'].RS3.options.selectedIndex = getParameterByName('S3');
     document.forms['bgvram'].ERS3.options.selectedIndex = getParameterByName('S3');
@@ -105,7 +111,8 @@ function loadp() {
   }
 
   // Set all options to a valid state
-  for (i=0; i<document.forms['bgvram'].length; i++) {
+  for (i=0; i<document.forms['bgvram'].length; i++)
+  {
     j = document.forms['bgvram'].elements[i];
     if ((j.type == 'select-one') && (j.selectedIndex == -1)) j.selectedIndex = 0;
   }
@@ -114,97 +121,124 @@ function loadp() {
   upd();
 }
 
-function bg_alloc_from(bgnum, bgtype, size, maxtiles, mapbase, tilebase) {
+function bg_alloc_from(bgnum, bgtype, size, maxtiles, mapbase, tilebase)
+{
   var i, j, sz, sz_t, sz_m, bgcstatus;
   bgnum *= 2;
 
   if (bgtype == 0) return;
-  if (bgtype == 1) {
+  if (bgtype == 1)
+  {
     sz_t = maxtiles / 32;
     sz = Math.ceil(sz_t);
-    for (i=0; i<sz; i++) {
+    for (i=0; i<sz; i++)
+    {
       j = (DISPCNT_TileBase * 32) + (tilebase * 8) + i;
       if (j >= 256) j = 256;
       if (j >= 0) VRAM_BGMapping[bgnum][j] = 1;
+      if (j > MaxAllocated) MaxAllocated = j;
     }
 
     sz_m = BGType_TSiz[size];
     sz = Math.ceil(sz_m);
-    for (i=0; i<sz; i++) {
+    for (i=0; i<sz; i++)
+    {
       j = (DISPCNT_MapBase * 32) + mapbase + i;
       if (j >= 256) j = 256;
       if (j >= 0) VRAM_BGMapping[bgnum+1][j] = 1;
+      if (j > MaxAllocated) MaxAllocated = j;
     }
   }
-  else if (bgtype == 2) {
+  else if (bgtype == 2)
+  {
     sz_t = maxtiles / 64;
     sz = Math.ceil(sz_t);
-    for (i=0; i<sz; i++) {
+    for (i=0; i<sz; i++)
+    {
       j = (DISPCNT_TileBase * 32) + (tilebase * 8) + i;
       if (j >= 256) j = 256;
       if (j >= 0) VRAM_BGMapping[bgnum][j] = 1;
+      if (j > MaxAllocated) MaxAllocated = j;
     }
 
     sz_m = BGType_TSiz[size];
     sz = Math.ceil(sz_m);
-    for (i=0; i<sz; i++) {
+    for (i=0; i<sz; i++)
+    {
       j = (DISPCNT_MapBase * 32) + mapbase + i;
       if (j >= 256) j = 256;
       if (j >= 0) VRAM_BGMapping[bgnum+1][j] = 1;
+      if (j > MaxAllocated) MaxAllocated = j;
     }
   }
-  else if (bgtype == 3) {
+  else if (bgtype == 3)
+  {
     sz_t = maxtiles / 32;
     sz = Math.ceil(sz_t);
-    for (i=0; i<sz; i++) {
+    for (i=0; i<sz; i++)
+    {
       j = (DISPCNT_TileBase * 32) + (tilebase * 8) + i;
       if (j >= 256) j = 256;
       if (j >= 0) VRAM_BGMapping[bgnum][j] = 1;
+      if (j > MaxAllocated) MaxAllocated = j;
     }
 
     sz_m = BGType_RSiz[size];
     sz = Math.ceil(sz_m);
-    for (i=0; i<sz; i++) {
+    for (i=0; i<sz; i++)
+    {
       j = (DISPCNT_MapBase * 32) + mapbase + i;
       if (j >= 256) j = 256;
       if (j >= 0) VRAM_BGMapping[bgnum+1][j] = 1;
+      if (j > MaxAllocated) MaxAllocated = j;
     }
   }
-  else if (bgtype == 4) {
+  else if (bgtype == 4)
+  {
     sz_t = maxtiles / 32;
     sz = Math.ceil(sz_t);
-    for (i=0; i<sz; i++) {
+    for (i=0; i<sz; i++)
+    {
       j = (DISPCNT_TileBase * 32) + (tilebase * 8) + i;
       if (j >= 256) j = 256;
       if (j >= 0) VRAM_BGMapping[bgnum][j] = 1;
+      if (j > MaxAllocated) MaxAllocated = j;
     }
 
     sz_m = BGType_ERSiz[size];
     sz = Math.ceil(sz_m);
-    for (i=0; i<sz; i++) {
+    for (i=0; i<sz; i++)
+    {
       j = (DISPCNT_MapBase * 32) + mapbase + i;
       if (j >= 256) j = 256;
       if (j >= 0) VRAM_BGMapping[bgnum+1][j] = 1;
+      if (j > MaxAllocated) MaxAllocated = j;
     }
   }
-  else if (bgtype == 5) {
+  else if (bgtype == 5)
+  {
     sz_t = BGType_B8Siz[size];
     sz = Math.ceil(sz_t);
-    for (i=0; i<sz; i++) {
+    for (i=0; i<sz; i++)
+    {
       j = (DISPCNT_MapBase * 32) + (mapbase * 8) + i;
       if (j >= 256) j = 256;
       if (j >= 0) VRAM_BGMapping[bgnum][j] = 2;
+      if (j > MaxAllocated) MaxAllocated = j;
     }
 
     sz_m = 0;
   }
-  else if (bgtype == 6) {
+  else if (bgtype == 6)
+  {
     sz_t = BGType_B16Siz[size];
     sz = Math.ceil(sz_t);
-    for (i=0; i<sz; i++) {
+    for (i=0; i<sz; i++)
+    {
       j = (DISPCNT_MapBase * 32) + (mapbase * 8) + i;
       if (j >= 256) j = 256;
       if (j >= 0) VRAM_BGMapping[bgnum][j] = 2;
+      if (j > MaxAllocated) MaxAllocated = j;
     }
 
     sz_m = 0;
@@ -213,15 +247,18 @@ function bg_alloc_from(bgnum, bgtype, size, maxtiles, mapbase, tilebase) {
   VRAM_BGSpace[bgnum+1] = sz_m * 2;
 }
 
-function bg_alloc_conflict() {
+function bg_alloc_conflict()
+{
   var i, j, bg, numweight;
   var ret = 1;
-  for (i=0; i<256; i++) {
+  for (i=0; i<256; i++)
+  {
     VRAM_BGError[i] = 0;
     numweight = 0;
 
     // Mark weight
-    for (bg=0; bg<8; bg+=2) {
+    for (bg=0; bg<8; bg+=2)
+    {
       if (SubEngine && (i >= 64) && (VRAM_BGMapping[bg][i] != 0)) numweight += 4;
       if (VRAM_BGMapping[bg+1][i] != 0) numweight += 4;
       if (VRAM_BGMapping[bg][i] == 1) numweight++;
@@ -233,7 +270,8 @@ function bg_alloc_conflict() {
     {
       if (SubEngine && (i >= 64))
       {
-        for (bg=0; bg<8; bg++) {
+        for (bg=0; bg<8; bg++)
+        {
           VRAM_BGMapping[bg][i] = 5;
         }
       }
@@ -242,8 +280,10 @@ function bg_alloc_conflict() {
     // Mark warnings
     if ((numweight >= 2) && (numweight < 5))
     {
-      for (bg=0; bg<8; bg+=2) {
-        if (VRAM_BGMapping[bg][i] > 0) {
+      for (bg=0; bg<8; bg+=2)
+      {
+        if (VRAM_BGMapping[bg][i] > 0)
+        {
           VRAM_BGMapping[bg][i] = 3;
           ret = 2;
         }
@@ -253,7 +293,8 @@ function bg_alloc_conflict() {
     // Mark errors
     if (numweight >= 5)
     {
-      for (bg=0; bg<8; bg+=2) {
+      for (bg=0; bg<8; bg+=2)
+      {
         if (SubEngine && (i >= 64))
         {
           if (VRAM_BGMapping[bg][i] > 0)
@@ -276,8 +317,10 @@ function bg_alloc_conflict() {
     }
   }
   VRAM_BGError[256] = 0;
-  for (bg=0; bg<8; bg++) {
-    if (VRAM_BGMapping[bg][256] > 0) {
+  for (bg=0; bg<8; bg++)
+  {
+    if (VRAM_BGMapping[bg][256] > 0)
+    {
       // Mark out of range
       VRAM_BGError[256] = 1;
       ret = 4;
@@ -286,7 +329,8 @@ function bg_alloc_conflict() {
   return ret;
 }
 
-function bg_allocation() {
+function bg_allocation()
+{
   var i, sz, szopt, maxtiles, mapbase, tilebase;
   var bgtype0, bgtype1, bgtype2, bgtype3;
   var wmode, a, b;
@@ -302,7 +346,8 @@ function bg_allocation() {
   if (DISPCNT_TileBase != 0) ShareLink += "&TS=" + DISPCNT_TileBase;
 
   // Setup array
-  for (i=0; i<257; i++) {
+  for (i=0; i<257; i++)
+  {
     VRAM_BGMapping[0][i] = 0;
     VRAM_BGMapping[1][i] = 0;
     VRAM_BGMapping[2][i] = 0;
@@ -316,7 +361,8 @@ function bg_allocation() {
 
   // Show/Hide controls
   i = document.forms['bgvram'].T0.options.selectedIndex;
-  if (i > 0) {
+  if (i > 0)
+  {
     document.getElementById('BG_TS0').style.display = "";
     document.getElementById('BG_NT0').style.display = "";
     document.getElementById('BG_MB0').style.display = "";
@@ -330,7 +376,8 @@ function bg_allocation() {
     document.getElementById('BG_TB0').style.display = "none";
   }
   i = document.forms['bgvram'].T1.options.selectedIndex;
-  if (i > 0) {
+  if (i > 0)
+  {
     document.getElementById('BG_TS1').style.display = "";
     document.getElementById('BG_NT1').style.display = "";
     document.getElementById('BG_MB1').style.display = "";
@@ -344,7 +391,8 @@ function bg_allocation() {
     document.getElementById('BG_TB1').style.display = "none";
   }
   i = document.forms['bgvram'].T2.options.selectedIndex;
-  if (i > 0) {
+  if (i > 0)
+  {
     document.getElementById('BG_TS2').style.display = (i < 3) ? "" : "none";
     document.getElementById('BG_RS2').style.display = (i == 3) ? "" : "none";
     document.getElementById('BG_ERS2').style.display = (i == 4) ? "" : "none";
@@ -368,7 +416,8 @@ function bg_allocation() {
     document.getElementById('BG_TB2').style.display = "none";
   }
   i = document.forms['bgvram'].T3.options.selectedIndex;
-  if (i > 0) {
+  if (i > 0)
+  {
     document.getElementById('BG_TS3').style.display = (i < 3) ? "" : "none";
     document.getElementById('BG_RS3').style.display = (i == 3) ? "" : "none";
     document.getElementById('BG_ERS3').style.display = (i == 4) ? "" : "none";
@@ -397,7 +446,8 @@ function bg_allocation() {
   maxtiles = document.forms['bgvram'].NT0.options[document.forms['bgvram'].NT0.options.selectedIndex].value;
   mapbase = document.forms['bgvram'].MB0.options.selectedIndex;
   tilebase = document.forms['bgvram'].TB0.options.selectedIndex;
-  if (bgtype0 > 0) {
+  if (bgtype0 > 0)
+  {
     ShareLink += "&T0=" + bgtype0 + "&NT0=" + maxtiles + "&MB0=" + mapbase + "&TB0=" + tilebase;
   }
   switch (bgtype0)
@@ -417,7 +467,8 @@ function bg_allocation() {
       document.getElementById('BG_DESC0').innerHTML = "* 16 colors tiles<br />* 16 Palettes";
     } break;
   }
-  if (bgtype0 > 0) {
+  if (bgtype0 > 0)
+  {
     ShareLink += "&S0=" + sz;
     bgcodesnippet += "<span class='func'>bgInit" + (SubEngine ? "Sub" : "") + "</span>(<span class='numm'>0</span>";
     bgcodesnippet += ", <span class='deff'>BgType_" + document.forms['bgvram'].T0.options[document.forms['bgvram'].T0.options.selectedIndex].value + "</span>";
@@ -431,7 +482,8 @@ function bg_allocation() {
   maxtiles = document.forms['bgvram'].NT1.options[document.forms['bgvram'].NT1.options.selectedIndex].value;
   mapbase = document.forms['bgvram'].MB1.options.selectedIndex;
   tilebase = document.forms['bgvram'].TB1.options.selectedIndex;
-  if (bgtype1 > 0) {
+  if (bgtype1 > 0)
+  {
     ShareLink += "&T1=" + bgtype1 + "&NT1=" + maxtiles + "&MB1=" + mapbase + "&TB1=" + tilebase;
   }
   switch (bgtype1)
@@ -451,7 +503,8 @@ function bg_allocation() {
       document.getElementById('BG_DESC1').innerHTML = "* 16 colors tiles<br />* 16 Palettes";
     } break;
   }
-  if (bgtype1 > 0) {
+  if (bgtype1 > 0)
+  {
     ShareLink += "&S1=" + sz;
     bgcodesnippet += "<span class='func'>bgInit" + (SubEngine ? "Sub" : "") + "</span>(<span class='numm'>1</span>";
     bgcodesnippet += ", <span class='deff'>BgType_" + document.forms['bgvram'].T1.options[document.forms['bgvram'].T1.options.selectedIndex].value + "</span>";
@@ -468,7 +521,8 @@ function bg_allocation() {
     maxtiles = document.forms['bgvram'].NT2.options[document.forms['bgvram'].NT2.options.selectedIndex].value;
   mapbase = document.forms['bgvram'].MB2.options.selectedIndex;
   tilebase = document.forms['bgvram'].TB2.options.selectedIndex;
-  if (bgtype2 > 0) {
+  if (bgtype2 > 0)
+  {
     ShareLink += "&T2=" + bgtype2 + "&NT2=" + maxtiles + "&MB2=" + mapbase + "&TB2=" + tilebase;
   }
   switch (bgtype2)
@@ -508,7 +562,8 @@ function bg_allocation() {
       document.getElementById('BG_DESC2').innerHTML = "* 32768 colors bitmap (+ 1-Bit Alpha)<br />Note1: Refer to BgSize_B8_256x256 but<br />only the top 256x192 is used.";
     } break;
   }
-  if (bgtype2 > 0) {
+  if (bgtype2 > 0)
+  {
     ShareLink += "&S2=" + sz;
     bgcodesnippet += "<span class='func'>bgInit" + (SubEngine ? "Sub" : "") + "</span>(<span class='numm'>2</span>";
     bgcodesnippet += ", <span class='deff'>BgType_" + document.forms['bgvram'].T2.options[document.forms['bgvram'].T2.options.selectedIndex].value + "</span>";
@@ -532,7 +587,8 @@ function bg_allocation() {
     maxtiles = document.forms['bgvram'].NT3.options[document.forms['bgvram'].NT3.options.selectedIndex].value;
   mapbase = document.forms['bgvram'].MB3.options.selectedIndex;
   tilebase = document.forms['bgvram'].TB3.options.selectedIndex;
-  if (bgtype3 > 0) {
+  if (bgtype3 > 0)
+  {
     ShareLink += "&T3=" + bgtype3 + "&NT3=" + maxtiles + "&MB3=" + mapbase + "&TB3=" + tilebase;
   }
   switch (bgtype3)
@@ -572,7 +628,8 @@ function bg_allocation() {
       document.getElementById('BG_DESC3').innerHTML = "* 32768 colors bitmap (+ 1-Bit Alpha)<br />Note1: Refer to BgSize_B8_256x256 but<br />only the top 256x192 is used.";
     } break;
   }
-  if (bgtype3 > 0) {
+  if (bgtype3 > 0)
+  {
     ShareLink += "&S3=" + sz;
     bgcodesnippet += "<span class='func'>bgInit" + (SubEngine ? "Sub" : "") + "</span>(<span class='numm'>3</span>";
     bgcodesnippet += ", <span class='deff'>BgType_" + document.forms['bgvram'].T3.options[document.forms['bgvram'].T3.options.selectedIndex].value + "</span>";
@@ -617,7 +674,8 @@ function bg_allocation() {
 
   // Get a working mode out of a list of combinations
   wmode = WorkModes[bgtype3 + bgtype2*8];
-  if (largebitmap) {
+  if (largebitmap)
+  {
     if ((bgtype0 == 0) && (bgtype1 == 0) && (bgtype3 == 0))
       wmode = 6;
     else
@@ -625,9 +683,15 @@ function bg_allocation() {
   }
 
   // Generate report
-  if (wmode < 0) {
+  if (wmode < 0)
+  {
     document.getElementById('Recommended_Mode').innerHTML = "<b>Error:</b> Invalid background type combination!";
     document.getElementById('Working_Engines').innerHTML = "<b>Error:</b> Combination won't work on hardware!";
+  }
+  else if (MaxAllocated >= 256)
+  {
+    document.getElementById('Recommended_Mode').innerHTML = "<b>Mode " + wmode + "</b> will support your options.";
+    document.getElementById('Working_Engines').innerHTML = "<b>Error:</b> Graphics out of range!";
   }
   else
   {
@@ -649,7 +713,8 @@ function bg_allocation() {
         document.getElementById('Working_Engines').innerHTML = "Works for Main Engine only!<br />For Sub Engine map, use DISPCNT 64KB steps of 0.";
   }
 
-  if ((wmode >= 0) && (bgcstatus < 3)) {
+  if ((wmode >= 0) && (bgcstatus < 3))
+  {
     document.getElementById('Report').innerHTML = "All options valid.";
     document.getElementById('Report').style.color = "#00A000";
   }
@@ -670,7 +735,8 @@ function bg_allocation() {
   }
 }
 
-function bg_allocation_table() {
+function bg_allocation_table()
+{
   var tableid, table, tr, td, i, j, k;
   tableid = document.getElementById('BGAllocationTable');
   tableid.innerHTML = "";
@@ -681,22 +747,26 @@ function bg_allocation_table() {
   tr = document.createElement('TR');
   tr.innerHTML = "<td>Gfx</td><td>Map</td><td>Gfx</td><td>Map</td><td>Gfx</td><td>Map</td><td>Gfx</td><td>Map</td>";
   table.appendChild(tr);
-  for (i=0; i<256; i++) {
+  for (i=0; i<256; i++)
+  {
     tr = document.createElement('TR');
 
     // Boundary
-    if (((i % 64) == 0) && (i != 0)) {
+    if (((i % 64) == 0) && (i != 0))
+    {
       tr.innerHTML = "<td colspan='11'>" + (i*2) + "KiB Boundary</td>";
       table.appendChild(tr);
       tr = document.createElement('TR');
     }
 
     // Tile Base
-    if ((i % 8) == 0) {
+    if ((i % 8) == 0)
+    {
       j = -(DISPCNT_TileBase * 4) + (i / 8);
       td = document.createElement('TD');
       for (k=0; k<8; k++) if (VRAM_BGError[i+k]) td.style.backgroundColor = "#DFAFAF";
-      if ((j >= 0) && (j < 16)) {
+      if ((j >= 0) && (j < 16))
+      {
         td.innerHTML = j;
       }
       else
@@ -722,10 +792,10 @@ function bg_allocation_table() {
     tr.appendChild(td);
 
     // Mark cells
-    for (j=0; j<8; j++) {
+    for (j=0; j<8; j++)
+    {
       td = document.createElement('TD');
       td.style.backgroundColor = ColorCode[VRAM_BGMapping[j][i]];
-      if (VRAM_BGMapping[j][i] != 0) MaxAllocated = i;
       tr.appendChild(td);
     }
 
@@ -745,7 +815,8 @@ function bg_allocation_table() {
   td.colSpan = 3;
   tr.appendChild(td);
   if (VRAM_BGError[256]) td.style.backgroundColor = "#DFAFAF";
-  for (j=0; j<8; j++) {
+  for (j=0; j<8; j++)
+  {
     td = document.createElement('TD');
     if (VRAM_BGMapping[j][256] == 0)
       td.style.backgroundColor = ColorCode[5];
@@ -759,7 +830,8 @@ function bg_allocation_table() {
   tableid.appendChild(table);
 }
 
-function upd() {
+function upd()
+{
   var i, a, b;
 
   // Clear globals

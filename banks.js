@@ -1,4 +1,5 @@
-function getParameterByName(name) {
+function getParameterByName(name)
+{
   name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
   var regex = new RegExp("[\\#&]" + name + "=([^&#]*)");
   var results = regex.exec(window.location.hash);
@@ -8,7 +9,8 @@ function getParameterByName(name) {
     return decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-function hasParameterByName(name) {
+function hasParameterByName(name)
+{
   name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
   var regex = new RegExp("[\\#&]" + name + "=([^&#]*)");
   var results = regex.exec(window.location.hash);
@@ -18,18 +20,23 @@ function hasParameterByName(name) {
     return true;
 }
 
-function OListSize(obj) {
+function OListSize(obj)
+{
   var size = 0;
-  for (key in obj) {
+  for (key in obj)
+  {
     if (obj.hasOwnProperty(key)) size++;
   }
   return size;
 }
 
-function OListGet(obj, idx) {
+function OListGet(obj, idx)
+{
   var off = 0;
-  for (key in obj) {
-    if (obj.hasOwnProperty(key)) {
+  for (key in obj)
+  {
+    if (obj.hasOwnProperty(key))
+    {
       if (idx == off) return obj[key];
       off++;
     }
@@ -37,11 +44,15 @@ function OListGet(obj, idx) {
   return null;
 }
 
-function OListSet(obj, idx, val) {
+function OListSet(obj, idx, val)
+{
   var off = 0;
-  for (key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      if (idx == off) {
+  for (key in obj)
+  {
+    if (obj.hasOwnProperty(key))
+    {
+      if (idx == off)
+      {
         obj[key] = val;
         return;
       }
@@ -218,7 +229,8 @@ var CPUAccessMap = {
 var Sel = {'A':'', 'B':'', 'C':'', 'D':'', 'E':'', 'F':'', 'G':'', 'H':'', 'I':''};
 var Err = {'A':'', 'B':'', 'C':'', 'D':'', 'E':'', 'F':'', 'G':'', 'H':'', 'I':''};
 
-function loadp() {
+function loadp()
+{
   var i, allElem = document.forms["banks"].elements;
 
   // Load parameters
@@ -233,7 +245,8 @@ function loadp() {
   if (hasParameterByName('I')) Sel['I'] = getParameterByName('I');
 
   // Mark selected items
-  for (var i=0; i < allElem.length; i++) {
+  for (var i=0; i < allElem.length; i++)
+  {
     Elem = allElem[i];
     if (Sel[Elem.name] == Elem.value)
       Elem.checked = true;
@@ -243,16 +256,19 @@ function loadp() {
   upd();
 }
 
-function upd() {
+function upd()
+{
   var allElem = document.forms["banks"].elements;
   var i, a, b, ShareLink;
   var numerr = 0;
 
   // Find selected items
-  for (var i = 0; i < allElem.length; i++) {
+  for (var i = 0; i < allElem.length; i++)
+  {
     Elem = allElem[i];
     ElemName = Elem.name + "_" + Elem.value;
-    if (Elem.checked) {
+    if (Elem.checked)
+    {
       Sel[Elem.name] = Elem.value;
     }
   }
@@ -261,17 +277,23 @@ function upd() {
   for (var a = 0; a < 9; a++)
     OListSet(Err, a, 0);
 
-  for (var a = 0; a < 9; a++) {
-    for (var b = a+1; b < 9; b++) {
+  for (var a = 0; a < 9; a++)
+  {
+    for (var b = a+1; b < 9; b++)
+    {
       cma = BankingMap['m'+OListGet(Sel, a)];
       cmb = BankingMap['m'+OListGet(Sel, b)];
-      for (c = 0; c < OListSize(cma); c++) {
-        if (cmb.indexOf(cma.charAt(c)) != -1) {
-          if (OListGet(Err, a) == 0) {
+      for (c = 0; c < OListSize(cma); c++)
+      {
+        if (cmb.indexOf(cma.charAt(c)) != -1)
+        {
+          if (OListGet(Err, a) == 0)
+          {
             numerr++;
             OListSet(Err, a, 1);
           }
-          if (OListGet(Err, b) == 0) {
+          if (OListGet(Err, b) == 0)
+          {
             numerr++;
             OListSet(Err, b, 1);
           }
@@ -281,10 +303,12 @@ function upd() {
   }
 
   // Mark valid/conflicts on the table
-  for (var i=0; i < allElem.length; i++) {
+  for (var i=0; i < allElem.length; i++)
+  {
     Elem = allElem[i];
     ElemName = Elem.name + "_" + Elem.value;
-    if (Elem.checked) {
+    if (Elem.checked)
+    {
       if (Err[Elem.name] == 0)
         document.getElementById(ElemName).className = 'g';
       else
@@ -296,7 +320,8 @@ function upd() {
 
   // Write result
   Notify = document.getElementById('Notify');
-  if (numerr == 0) {
+  if (numerr == 0)
+  {
     Notify.style.color = "#008000";
     Notify.innerHTML = "No conflict found ";
   }
@@ -316,7 +341,8 @@ function upd() {
 
   // Generate the function call
   FCall = document.getElementById('FunctionCall');
-  if (numerr == 0) {
+  if (numerr == 0)
+  {
     FCall.innerHTML =  "<span class='func'>vramSetBankA</span>(<span class='deff'>VRAM_A_" + BankingMap['f'+Sel['A']] + "</span>);<br />";
     FCall.innerHTML += "<span class='func'>vramSetBankB</span>(<span class='deff'>VRAM_B_" + BankingMap['f'+Sel['B']] + "</span>);<br />";
     FCall.innerHTML += "<span class='func'>vramSetBankC</span>(<span class='deff'>VRAM_C_" + BankingMap['f'+Sel['C']] + "</span>);<br />";
@@ -332,7 +358,8 @@ function upd() {
 
   // Generate the cpu access
   CPUAcc = document.getElementById('CPUAccess');
-  if (numerr == 0) {
+  if (numerr == 0)
+  {
     CPUAcc.innerHTML =  "<b>A:</b> " + CPUAccessMap['A_'+Sel['A']] + "<br />";
     CPUAcc.innerHTML += "<b>B:</b> " + CPUAccessMap['B_'+Sel['B']] + "<br />";
     CPUAcc.innerHTML += "<b>C:</b> " + CPUAccessMap['C_'+Sel['C']] + "<br />";
