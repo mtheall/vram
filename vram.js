@@ -242,6 +242,7 @@ function bg_allocation() {
   var i, sz, szopt, maxtiles, mapbase, tilebase;
   var bgtype0, bgtype1, bgtype2, bgtype3;
   var wmode, funccallsub, a, b;
+  var bgcodesnippet = "";
   var largebitmap = false;
 
   // Set DISPCNT offsets
@@ -369,9 +370,9 @@ function bg_allocation() {
   }
   if (bgtype0 > 0) {
     ShareLink += "&S0=" + sz;
-    if (funccallsub) Function_Call += "bgInitSub(0"; else Function_Call += "bgInit(0";
-    Function_Call += ", BgType_" + document.forms['bgvram'].T0.options[document.forms['bgvram'].T0.options.selectedIndex].value;
-    Function_Call += ", BgSize_" + szopt[szopt.selectedIndex].value + ", " + mapbase + ", " + tilebase + ");<br />";
+    if (funccallsub) bgcodesnippet += "bgInitSub(0"; else bgcodesnippet += "bgInit(0";
+    bgcodesnippet += ", BgType_" + document.forms['bgvram'].T0.options[document.forms['bgvram'].T0.options.selectedIndex].value;
+    bgcodesnippet += ", BgSize_" + szopt[szopt.selectedIndex].value + ", " + mapbase + ", " + tilebase + ");<br />";
   }
   bg_alloc_from(0, bgtype0, sz, maxtiles, mapbase, tilebase);
 
@@ -402,9 +403,9 @@ function bg_allocation() {
   }
   if (bgtype1 > 0) {
     ShareLink += "&S1=" + sz;
-    if (funccallsub) Function_Call += "bgInitSub(1"; else Function_Call += "bgInit(1";
-    Function_Call += ", BgType_" + document.forms['bgvram'].T1.options[document.forms['bgvram'].T1.options.selectedIndex].value;
-    Function_Call += ", BgSize_" + szopt[szopt.selectedIndex].value + ", " + mapbase + ", " + tilebase + ");<br />";
+    if (funccallsub) bgcodesnippet += "bgInitSub(1"; else bgcodesnippet += "bgInit(1";
+    bgcodesnippet += ", BgType_" + document.forms['bgvram'].T1.options[document.forms['bgvram'].T1.options.selectedIndex].value;
+    bgcodesnippet += ", BgSize_" + szopt[szopt.selectedIndex].value + ", " + mapbase + ", " + tilebase + ");<br />";
   }
   bg_alloc_from(1, bgtype1, sz, maxtiles, mapbase, tilebase);
 
@@ -458,17 +459,17 @@ function bg_allocation() {
   }
   if (bgtype2 > 0) {
     ShareLink += "&S2=" + sz;
-    if (funccallsub) Function_Call += "bgInitSub(2"; else Function_Call += "bgInit(2";
-    Function_Call += ", BgType_" + document.forms['bgvram'].T2.options[document.forms['bgvram'].T2.options.selectedIndex].value;
+    if (funccallsub) bgcodesnippet += "bgInitSub(2"; else bgcodesnippet += "bgInit(2";
+    bgcodesnippet += ", BgType_" + document.forms['bgvram'].T2.options[document.forms['bgvram'].T2.options.selectedIndex].value;
     if (szopt[szopt.selectedIndex].value == 'B8_256x192')
-      Function_Call += ", BgSize_B8_256x256";
+      bgcodesnippet += ", BgSize_B8_256x256";
     else if (szopt[szopt.selectedIndex].value == 'B16_256x192')
-      Function_Call += ", BgSize_B16_256x256";
+      bgcodesnippet += ", BgSize_B16_256x256";
     else
-      Function_Call += ", BgSize_" + szopt[szopt.selectedIndex].value;
+      bgcodesnippet += ", BgSize_" + szopt[szopt.selectedIndex].value;
     if ((szopt[szopt.selectedIndex].value == 'B8_512x1024') || (szopt[szopt.selectedIndex].value == 'B8_1024x512')) largebitmap = true;
-    Function_Call += ", " + mapbase + ", " + tilebase + ");<br />";
-    if (funccallsub) Function_Call += "// Error! Large bitmap isn't supported on Sub Engine";
+    bgcodesnippet += ", " + mapbase + ", " + tilebase + ");<br />";
+    if (funccallsub && largebitmap) bgcodesnippet += "// Error! Large bitmap isn't supported on Sub Engine";
   }
   bg_alloc_from(2, bgtype2, sz, maxtiles, mapbase, tilebase);
 
@@ -522,15 +523,15 @@ function bg_allocation() {
   }
   if (bgtype3 > 0) {
     ShareLink += "&S3=" + sz;
-    if (funccallsub) Function_Call += "bgInitSub(3"; else Function_Call += "bgInit(3";
-    Function_Call += ", BgType_" + document.forms['bgvram'].T3.options[document.forms['bgvram'].T3.options.selectedIndex].value;
+    if (funccallsub) bgcodesnippet += "bgInitSub(3"; else bgcodesnippet += "bgInit(3";
+    bgcodesnippet += ", BgType_" + document.forms['bgvram'].T3.options[document.forms['bgvram'].T3.options.selectedIndex].value;
     if (szopt[szopt.selectedIndex].value == 'B8_256x192')
-      Function_Call += ", BgSize_B8_256x256";
+      bgcodesnippet += ", BgSize_B8_256x256";
     else if (szopt[szopt.selectedIndex].value == 'B16_256x192')
-      Function_Call += ", BgSize_B16_256x256";
+      bgcodesnippet += ", BgSize_B16_256x256";
     else
-      Function_Call += ", BgSize_" + szopt[szopt.selectedIndex].value;
-    Function_Call += ", " + mapbase + ", " + tilebase + ");<br />";
+      bgcodesnippet += ", BgSize_" + szopt[szopt.selectedIndex].value;
+    bgcodesnippet += ", " + mapbase + ", " + tilebase + ");<br />";
   }
   bg_alloc_from(3, bgtype3, sz, maxtiles, mapbase, tilebase);
 
@@ -563,6 +564,7 @@ function bg_allocation() {
     case 4: document.getElementById('Mapping_Status').innerHTML = "<b>Error:</b> VRAM BG Allocation is outside the range."; break;
   }
 
+  // Get a working mode out of a list of combinations
   wmode = WorkModes[bgtype3 + bgtype2*8];
   if (largebitmap) {
     if ((bgtype0 == 0) && (bgtype1 == 0) && (bgtype3 == 0))
@@ -571,6 +573,7 @@ function bg_allocation() {
       wmode = -1;
   }
 
+  // Generate report
   if (wmode < 0) {
     document.getElementById('Recommended_Mode').innerHTML = "<b>Error:</b> Invalid background type combination!";
     document.getElementById('Working_Engines').innerHTML = "<b>Error:</b> Combination won't work on hardware!";
@@ -578,13 +581,19 @@ function bg_allocation() {
   else
   {
     document.getElementById('Recommended_Mode').innerHTML = "<b>Mode " + wmode + "</b> will support your options.";
-    if ((DISPCNT_MapBase == 0) && (DISPCNT_TileBase == 0))
+    if (funccallsub && largebitmap)
+    {
+      document.getElementById('Recommended_Mode').innerHTML = "<b>Error:</b> Sub Engine don't support large bitmaps.";
+      document.getElementById('Working_Engines').innerHTML = "<b>Error:</b> Combination won't work on hardware!";
+      wmode = -1;
+    }
+    else if ((DISPCNT_MapBase == 0) && (DISPCNT_TileBase == 0))
       document.getElementById('Working_Engines').innerHTML = "Works for Main Engine or Sub Engine.";
     else
       document.getElementById('Working_Engines').innerHTML = "Works for Main Engine only!<br />For Sub Engine map, use DISPCNT 64KB steps of 0.";
   }
 
-  if ((wmode >= 0) && (bgcstatus < 3) ) {
+  if ((wmode >= 0) && (bgcstatus < 3)) {
     document.getElementById('Report').innerHTML = "All options valid.";
     document.getElementById('Report').style.color = "#00A000";
   }
@@ -592,6 +601,16 @@ function bg_allocation() {
   {
     document.getElementById('Report').innerHTML = "Found errors/conflicts.";
     document.getElementById('Report').style.color = "#C00000";
+  }
+
+  // Generate function calls
+  if ((wmode < 0) || (bgcstatus >= 3))
+    Function_Call += "// Error(s) found<br />";
+  else
+  {
+    Function_Call += "videoSetMode" + (funccallsub ? "Sub" : "") + "(MODE_" + wmode + "_2D);<br />";
+    if (bgcodesnippet.length > 0) Function_Call += "<br />";
+    Function_Call += bgcodesnippet;
   }
 }
 
