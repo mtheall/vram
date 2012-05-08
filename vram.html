@@ -13,11 +13,12 @@
    <h1>NDS Homebrew VRAM BG Allocation Conflict Viewer</h1>
    <h4>For the VRAM Banks Selector tool <a href="banks.html">click here</a></h4>
    <h4>Please contact mtheall in #dsdev on irc.blitzed.org regarding errors, discrepancies, suggestions, or bugs with this tool</h4>
-   <h4>Link for sharing: <span id='ShareLink'>Javascript must be enabled</span></h4>
+   <h4>Link for sharing: <span id='ShareLink'>Loading...</span></h4>
    <hr />
    <form name='bgvram'>
     <table class='main'>
      <tr><td class='main' style='width:350px'>
+      <p class="sube"><input type="checkbox" name="SubEngine" value="yes" onClick="upd()"> Sub Engine</p>
       <h2>Base select</h2>
       <p>DISPCNT Map Base 64KB Step</p>
       <select name="MS" onChange="upd()">
@@ -656,22 +657,21 @@
       <p>&nbsp;</p>
       <h2>Function Call</h2>
       <table style='width:320px'>
-       <thead>
-        <tr><td class='left'><input type="checkbox" name="FuncCallSub" value="yes" onClick="upd()">Generate for Sub Engine</td></tr>
-       </thead>
-       <tr><td class='left' id='FunctionCall'>Javascript must be enabled</td></tr>
+       <tr><td class='left' id='FunctionCall'>Loading...</td></tr>
       </table>
       <p>&nbsp;</p>
       <table style='width:320px'>
        <tr><td colspan=3 class="left">Legend</td></tr>
+       <tr><td class=""  style='width=32px'></td><td class="left">Empty</td><td class="left"></td></tr>
+       <tr><td class="x" style='width=32px'></td><td class="left">Empty</td><td class="left"></td></tr>
        <tr><td class="g" style='width=32px'></td><td class="left">Okay!</td><td class="left"></td></tr>
        <tr><td class="y" style='width=32px'></td><td class="left">Warning!</td><td class="left">Safe if shared tileset graphics</td></tr>
        <tr><td class="r" style='width=32px'></td><td class="left">Error!</td><td class="left">You will definitely have corrupted graphics.<br>Additionally, zeromus will slap you.</td></tr>
-       <tr><td class=""  style='width=32px'></td><td class="left">Empty</td><td class="left"></td></tr>
+       <tr><td class="dr" style='width=32px'></td><td class="left">Error!</td><td class="left">Graphics fall outside the valid range.</td></tr>
       </table>
      </td><td class='main'>
       <div id="VRAMBGAlloc">
-       <div id='BGAllocationTable'>Javascript must be enabled</div>
+       <div id='BGAllocationTable'>Loading...</div>
       </div>
      </td></tr>
     </table>

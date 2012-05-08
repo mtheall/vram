@@ -1,12 +1,21 @@
 function getParameterByName(name) {
   name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-  var regexS = "[\\?&]" + name + "=([^&#]*)";
-  var regex = new RegExp(regexS);
-  var results = regex.exec(window.location.search);
+  var regex = new RegExp("[\\#&]" + name + "=([^&#]*)");
+  var results = regex.exec(window.location.hash);
   if(results == null)
     return "";
   else
     return decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+function hasParameterByName(name) {
+  name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+  var regex = new RegExp("[\\#&]" + name + "=([^&#]*)");
+  var results = regex.exec(window.location.hash);
+  if(results == null)
+    return false;
+  else
+    return true;
 }
 
 function OListSize(obj) {
@@ -86,124 +95,124 @@ var BankingMap = {
 
 var CPUAccessMap = {
   // LCD
-  'A_LCD'   :'ARM9 0x06800000 - 0x0681FFFF (128KB)',
-  'B_LCD'   :'ARM9 0x06820000 - 0x0683FFFF (128KB)',
-  'C_LCD'   :'ARM9 0x06840000 - 0x0685FFFF (128KB)',
-  'D_LCD'   :'ARM9 0x06860000 - 0x0687FFFF (128KB)',
-  'E_LCD'   :'ARM9 0x06880000 - 0x0688FFFF ( 64KB)',
-  'F_LCD'   :'ARM9 0x06890000 - 0x06893FFF ( 16KB)',
-  'G_LCD'   :'ARM9 0x06894000 - 0x06897FFF ( 16KB)',
-  'H_LCD'   :'ARM9 0x06898000 - 0x0689FFFF ( 32KB)',
-  'I_LCD'   :'ARM9 0x068A0000 - 0x068A3FFF ( 16KB)',
+  'A_LCD'   :'<span class="func">ARM9</span> <span class="numm">0x06800000 - 0x0681FFFF</span> <span class="deff">(128KB)</span>',
+  'B_LCD'   :'<span class="func">ARM9</span> <span class="numm">0x06820000 - 0x0683FFFF</span> <span class="deff">(128KB)</span>',
+  'C_LCD'   :'<span class="func">ARM9</span> <span class="numm">0x06840000 - 0x0685FFFF</span> <span class="deff">(128KB)</span>',
+  'D_LCD'   :'<span class="func">ARM9</span> <span class="numm">0x06860000 - 0x0687FFFF</span> <span class="deff">(128KB)</span>',
+  'E_LCD'   :'<span class="func">ARM9</span> <span class="numm">0x06880000 - 0x0688FFFF</span> <span class="deff">( 64KB)</span>',
+  'F_LCD'   :'<span class="func">ARM9</span> <span class="numm">0x06890000 - 0x06893FFF</span> <span class="deff">( 16KB)</span>',
+  'G_LCD'   :'<span class="func">ARM9</span> <span class="numm">0x06894000 - 0x06897FFF</span> <span class="deff">( 16KB)</span>',
+  'H_LCD'   :'<span class="func">ARM9</span> <span class="numm">0x06898000 - 0x0689FFFF</span> <span class="deff">( 32KB)</span>',
+  'I_LCD'   :'<span class="func">ARM9</span> <span class="numm">0x068A0000 - 0x068A3FFF</span> <span class="deff">( 16KB)</span>',
 
   // ARM7
-  'C_ARM70' :'ARM7 0x06000000 - 0x0601FFFF (128KB)',
-  'D_ARM70' :'ARM7 0x06000000 - 0x0601FFFF (128KB)',
-  'C_ARM71' :'ARM7 0x06020000 - 0x0603FFFF (128KB)',
-  'D_ARM71' :'ARM7 0x06020000 - 0x0603FFFF (128KB)',
+  'C_ARM70' :'<span class="func">ARM7</span> <span class="numm">0x06000000 - 0x0601FFFF</span> <span class="deff">(128KB)</span>',
+  'D_ARM70' :'<span class="func">ARM7</span> <span class="numm">0x06000000 - 0x0601FFFF</span> <span class="deff">(128KB)</span>',
+  'C_ARM71' :'<span class="func">ARM7</span> <span class="numm">0x06020000 - 0x0603FFFF</span> <span class="deff">(128KB)</span>',
+  'D_ARM71' :'<span class="func">ARM7</span> <span class="numm">0x06020000 - 0x0603FFFF</span> <span class="deff">(128KB)</span>',
 
   // Main Background
-  'A_MBG0'  :'ARM9 0x06000000 - 0x0601FFFF (128KB)',
-  'A_MBG1'  :'ARM9 0x06020000 - 0x0603FFFF (128KB)',
-  'A_MBG2'  :'ARM9 0x06040000 - 0x0605FFFF (128KB)',
-  'A_MBG3'  :'ARM9 0x06060000 - 0x0607FFFF (128KB)',
-  'B_MBG0'  :'ARM9 0x06000000 - 0x0601FFFF (128KB)',
-  'B_MBG1'  :'ARM9 0x06020000 - 0x0603FFFF (128KB)',
-  'B_MBG2'  :'ARM9 0x06040000 - 0x0605FFFF (128KB)',
-  'B_MBG3'  :'ARM9 0x06060000 - 0x0607FFFF (128KB)',
-  'C_MBG0'  :'ARM9 0x06000000 - 0x0601FFFF (128KB)',
-  'C_MBG1'  :'ARM9 0x06020000 - 0x0603FFFF (128KB)',
-  'C_MBG2'  :'ARM9 0x06040000 - 0x0605FFFF (128KB)',
-  'C_MBG3'  :'ARM9 0x06060000 - 0x0607FFFF (128KB)',
-  'D_MBG0'  :'ARM9 0x06000000 - 0x0601FFFF (128KB)',
-  'D_MBG1'  :'ARM9 0x06020000 - 0x0603FFFF (128KB)',
-  'D_MBG2'  :'ARM9 0x06040000 - 0x0605FFFF (128KB)',
-  'D_MBG3'  :'ARM9 0x06060000 - 0x0607FFFF (128KB)',
-  'E_MBG'   :'ARM9 0x06000000 - 0x0600FFFF ( 64KB)',
-  'F_MBG00' :'ARM9 0x06000000 - 0x06003FFF ( 16KB)',
-  'F_MBG01' :'ARM9 0x06004000 - 0x06007FFF ( 16KB)',
-  'F_MBG02' :'ARM9 0x06008000 - 0x0600BFFF ( 16KB)',
-  'F_MBG03' :'ARM9 0x0600C000 - 0x0600FFFF ( 16KB)',
-  'G_MBG00' :'ARM9 0x06000000 - 0x06003FFF ( 16KB)',
-  'G_MBG01' :'ARM9 0x06004000 - 0x06007FFF ( 16KB)',
-  'G_MBG02' :'ARM9 0x06008000 - 0x0600BFFF ( 16KB)',
-  'G_MBG03' :'ARM9 0x0600C000 - 0x0600FFFF ( 16KB)',
+  'A_MBG0'  :'<span class="func">ARM9</span> <span class="numm">0x06000000 - 0x0601FFFF</span> <span class="deff">(128KB)</span>',
+  'A_MBG1'  :'<span class="func">ARM9</span> <span class="numm">0x06020000 - 0x0603FFFF</span> <span class="deff">(128KB)</span>',
+  'A_MBG2'  :'<span class="func">ARM9</span> <span class="numm">0x06040000 - 0x0605FFFF</span> <span class="deff">(128KB)</span>',
+  'A_MBG3'  :'<span class="func">ARM9</span> <span class="numm">0x06060000 - 0x0607FFFF</span> <span class="deff">(128KB)</span>',
+  'B_MBG0'  :'<span class="func">ARM9</span> <span class="numm">0x06000000 - 0x0601FFFF</span> <span class="deff">(128KB)</span>',
+  'B_MBG1'  :'<span class="func">ARM9</span> <span class="numm">0x06020000 - 0x0603FFFF</span> <span class="deff">(128KB)</span>',
+  'B_MBG2'  :'<span class="func">ARM9</span> <span class="numm">0x06040000 - 0x0605FFFF</span> <span class="deff">(128KB)</span>',
+  'B_MBG3'  :'<span class="func">ARM9</span> <span class="numm">0x06060000 - 0x0607FFFF</span> <span class="deff">(128KB)</span>',
+  'C_MBG0'  :'<span class="func">ARM9</span> <span class="numm">0x06000000 - 0x0601FFFF</span> <span class="deff">(128KB)</span>',
+  'C_MBG1'  :'<span class="func">ARM9</span> <span class="numm">0x06020000 - 0x0603FFFF</span> <span class="deff">(128KB)</span>',
+  'C_MBG2'  :'<span class="func">ARM9</span> <span class="numm">0x06040000 - 0x0605FFFF</span> <span class="deff">(128KB)</span>',
+  'C_MBG3'  :'<span class="func">ARM9</span> <span class="numm">0x06060000 - 0x0607FFFF</span> <span class="deff">(128KB)</span>',
+  'D_MBG0'  :'<span class="func">ARM9</span> <span class="numm">0x06000000 - 0x0601FFFF</span> <span class="deff">(128KB)</span>',
+  'D_MBG1'  :'<span class="func">ARM9</span> <span class="numm">0x06020000 - 0x0603FFFF</span> <span class="deff">(128KB)</span>',
+  'D_MBG2'  :'<span class="func">ARM9</span> <span class="numm">0x06040000 - 0x0605FFFF</span> <span class="deff">(128KB)</span>',
+  'D_MBG3'  :'<span class="func">ARM9</span> <span class="numm">0x06060000 - 0x0607FFFF</span> <span class="deff">(128KB)</span>',
+  'E_MBG'   :'<span class="func">ARM9</span> <span class="numm">0x06000000 - 0x0600FFFF</span> <span class="deff">( 64KB)</span>',
+  'F_MBG00' :'<span class="func">ARM9</span> <span class="numm">0x06000000 - 0x06003FFF</span> <span class="deff">( 16KB)</span>',
+  'F_MBG01' :'<span class="func">ARM9</span> <span class="numm">0x06004000 - 0x06007FFF</span> <span class="deff">( 16KB)</span>',
+  'F_MBG02' :'<span class="func">ARM9</span> <span class="numm">0x06008000 - 0x0600BFFF</span> <span class="deff">( 16KB)</span>',
+  'F_MBG03' :'<span class="func">ARM9</span> <span class="numm">0x0600C000 - 0x0600FFFF</span> <span class="deff">( 16KB)</span>',
+  'G_MBG00' :'<span class="func">ARM9</span> <span class="numm">0x06000000 - 0x06003FFF</span> <span class="deff">( 16KB)</span>',
+  'G_MBG01' :'<span class="func">ARM9</span> <span class="numm">0x06004000 - 0x06007FFF</span> <span class="deff">( 16KB)</span>',
+  'G_MBG02' :'<span class="func">ARM9</span> <span class="numm">0x06008000 - 0x0600BFFF</span> <span class="deff">( 16KB)</span>',
+  'G_MBG03' :'<span class="func">ARM9</span> <span class="numm">0x0600C000 - 0x0600FFFF</span> <span class="deff">( 16KB)</span>',
 
   // Main Sprite
-  'A_MOBJ0' :'ARM9 0x06400000 - 0x0641FFFF (128KB)',
-  'A_MOBJ1' :'ARM9 0x06420000 - 0x0643FFFF (128KB)',
-  'B_MOBJ0' :'ARM9 0x06400000 - 0x0641FFFF (128KB)',
-  'B_MOBJ1' :'ARM9 0x06420000 - 0x0643FFFF (128KB)',
-  'E_MOBJ'  :'ARM9 0x06400000 - 0x0640FFFF ( 64KB)',
-  'F_MOBJ00':'ARM9 0x06400000 - 0x06403FFF ( 16KB)',
-  'F_MOBJ01':'ARM9 0x06404000 - 0x06407FFF ( 16KB)',
-  'F_MOBJ02':'ARM9 0x06880000 - 0x0688FFFF ( 64KB)',
-  'F_MOBJ03':'ARM9 0x06410000 - 0x06413FFF ( 16KB)',
-  'G_MOBJ00':'ARM9 0x06400000 - 0x06403FFF ( 16KB)',
-  'G_MOBJ01':'ARM9 0x06404000 - 0x06407FFF ( 16KB)',
-  'G_MOBJ02':'ARM9 0x06880000 - 0x0688FFFF ( 64KB)',
-  'G_MOBJ03':'ARM9 0x06410000 - 0x06413FFF ( 16KB)',
+  'A_MOBJ0' :'<span class="func">ARM9</span> <span class="numm">0x06400000 - 0x0641FFFF</span> <span class="deff">(128KB)</span>',
+  'A_MOBJ1' :'<span class="func">ARM9</span> <span class="numm">0x06420000 - 0x0643FFFF</span> <span class="deff">(128KB)</span>',
+  'B_MOBJ0' :'<span class="func">ARM9</span> <span class="numm">0x06400000 - 0x0641FFFF</span> <span class="deff">(128KB)</span>',
+  'B_MOBJ1' :'<span class="func">ARM9</span> <span class="numm">0x06420000 - 0x0643FFFF</span> <span class="deff">(128KB)</span>',
+  'E_MOBJ'  :'<span class="func">ARM9</span> <span class="numm">0x06400000 - 0x0640FFFF</span> <span class="deff">( 64KB)</span>',
+  'F_MOBJ00':'<span class="func">ARM9</span> <span class="numm">0x06400000 - 0x06403FFF</span> <span class="deff">( 16KB)</span>',
+  'F_MOBJ01':'<span class="func">ARM9</span> <span class="numm">0x06404000 - 0x06407FFF</span> <span class="deff">( 16KB)</span>',
+  'F_MOBJ02':'<span class="func">ARM9</span> <span class="numm">0x06880000 - 0x0688FFFF</span> <span class="deff">( 64KB)</span>',
+  'F_MOBJ03':'<span class="func">ARM9</span> <span class="numm">0x06410000 - 0x06413FFF</span> <span class="deff">( 16KB)</span>',
+  'G_MOBJ00':'<span class="func">ARM9</span> <span class="numm">0x06400000 - 0x06403FFF</span> <span class="deff">( 16KB)</span>',
+  'G_MOBJ01':'<span class="func">ARM9</span> <span class="numm">0x06404000 - 0x06407FFF</span> <span class="deff">( 16KB)</span>',
+  'G_MOBJ02':'<span class="func">ARM9</span> <span class="numm">0x06880000 - 0x0688FFFF</span> <span class="deff">( 64KB)</span>',
+  'G_MOBJ03':'<span class="func">ARM9</span> <span class="numm">0x06410000 - 0x06413FFF</span> <span class="deff">( 16KB)</span>',
 
   // Main Background Extended Palette
-  'E_BGEPAL'  :'LCD: 0x06880000 - 0x06887FFF ( 32KB)',
-  'F_BGEPAL01':'LCD: 0x06890000 - 0x06893FFF ( 16KB)',
-  'F_BGEPAL23':'LCD: 0x06894000 - 0x06897FFF ( 16KB)',
-  'G_BGEPAL01':'LCD: 0x06890000 - 0x06893FFF ( 16KB)',
-  'G_BGEPAL23':'LCD: 0x06894000 - 0x06897FFF ( 16KB)',
+  'E_BGEPAL'  :'<span class="func">LCD:</span> <span class="numm">0x06880000 - 0x06887FFF</span> <span class="deff">( 32KB)</span>',
+  'F_BGEPAL01':'<span class="func">LCD:</span> <span class="numm">0x06890000 - 0x06893FFF</span> <span class="deff">( 16KB)</span>',
+  'F_BGEPAL23':'<span class="func">LCD:</span> <span class="numm">0x06894000 - 0x06897FFF</span> <span class="deff">( 16KB)</span>',
+  'G_BGEPAL01':'<span class="func">LCD:</span> <span class="numm">0x06890000 - 0x06893FFF</span> <span class="deff">( 16KB)</span>',
+  'G_BGEPAL23':'<span class="func">LCD:</span> <span class="numm">0x06894000 - 0x06897FFF</span> <span class="deff">( 16KB)</span>',
 
   // Main Sprite Extended Palette
-  'F_OBJEPAL' :'LCD: 0x06890000 - 0x06891FFF (  8KB)',
-  'G_OBJEPAL' :'LCD: 0x06890000 - 0x06891FFF (  8KB)',
+  'F_OBJEPAL' :'<span class="func">LCD:</span> <span class="numm">0x06890000 - 0x06891FFF</span> <span class="deff">(  8KB)</span>',
+  'G_OBJEPAL' :'<span class="func">LCD:</span> <span class="numm">0x06890000 - 0x06891FFF</span> <span class="deff">(  8KB)</span>',
 
   // Sub Background
-  'C_SBG' :'ARM9 0x06200000 - 0x0621FFFF (128KB)',
-  'H_SBG0':'ARM9 0x06200000 - 0x06207FFF ( 32KB)',
-  'I_SBG1':'ARM9 0x06208000 - 0x0620BFFF ( 16KB)',
+  'C_SBG' :'<span class="func">ARM9</span> <span class="numm">0x06200000 - 0x0621FFFF</span> <span class="deff">(128KB)</span>',
+  'H_SBG0':'<span class="func">ARM9</span> <span class="numm">0x06200000 - 0x06207FFF</span> <span class="deff">( 32KB)</span>',
+  'I_SBG1':'<span class="func">ARM9</span> <span class="numm">0x06208000 - 0x0620BFFF</span> <span class="deff">( 16KB)</span>',
 
   // Sub Sprite
-  'D_SOBJ':'ARM9 0x06600000 - 0x0661FFFF (128KB)',
-  'I_SOBJ':'ARM9 0x06600000 - 0x06603FFF ( 16KB)',
+  'D_SOBJ':'<span class="func">ARM9</span> <span class="numm">0x06600000 - 0x0661FFFF</span> <span class="deff">(128KB)</span>',
+  'I_SOBJ':'<span class="func">ARM9</span> <span class="numm">0x06600000 - 0x06603FFF</span> <span class="deff">( 16KB)</span>',
 
   // Sub Background Extended Palette
-  'H_SBGEPAL' :'LCD: 0x06898000 - 0x0689FFFF ( 32KB)',
+  'H_SBGEPAL' :'<span class="func">LCD:</span> <span class="numm">0x06898000 - 0x0689FFFF</span> <span class="deff">( 32KB)</span>',
 
   // Sub Sprite Extended Palette
-  'I_SOBJEPAL':'LCD: 0x068A0000 - 0x068A3FFF ( 16KB)',
+  'I_SOBJEPAL':'<span class="func">LCD:</span> <span class="numm">0x068A0000 - 0x068A3FFF</span> <span class="deff">( 16KB)</span>',
 
   // Texture Slot 0
-  'A_TS0':'LCD: 0x06800000 - 0x0681FFFF (128KB)',
-  'B_TS0':'LCD: 0x06800000 - 0x0681FFFF (128KB)',
-  'C_TS0':'LCD: 0x06800000 - 0x0681FFFF (128KB)',
-  'D_TS0':'LCD: 0x06800000 - 0x0681FFFF (128KB)',
+  'A_TS0':'<span class="func">LCD:</span> <span class="numm">0x06800000 - 0x0681FFFF</span> <span class="deff">(128KB)</span>',
+  'B_TS0':'<span class="func">LCD:</span> <span class="numm">0x06800000 - 0x0681FFFF</span> <span class="deff">(128KB)</span>',
+  'C_TS0':'<span class="func">LCD:</span> <span class="numm">0x06800000 - 0x0681FFFF</span> <span class="deff">(128KB)</span>',
+  'D_TS0':'<span class="func">LCD:</span> <span class="numm">0x06800000 - 0x0681FFFF</span> <span class="deff">(128KB)</span>',
 
   // Texture Slot 1
-  'A_TS1':'LCD: 0x06820000 - 0x0683FFFF (128KB)',
-  'B_TS1':'LCD: 0x06820000 - 0x0683FFFF (128KB)',
-  'C_TS1':'LCD: 0x06820000 - 0x0683FFFF (128KB)',
-  'D_TS1':'LCD: 0x06820000 - 0x0683FFFF (128KB)',
+  'A_TS1':'<span class="func">LCD:</span> <span class="numm">0x06820000 - 0x0683FFFF</span> <span class="deff">(128KB)</span>',
+  'B_TS1':'<span class="func">LCD:</span> <span class="numm">0x06820000 - 0x0683FFFF</span> <span class="deff">(128KB)</span>',
+  'C_TS1':'<span class="func">LCD:</span> <span class="numm">0x06820000 - 0x0683FFFF</span> <span class="deff">(128KB)</span>',
+  'D_TS1':'<span class="func">LCD:</span> <span class="numm">0x06820000 - 0x0683FFFF</span> <span class="deff">(128KB)</span>',
 
   // Texture Slot 2
-  'A_TS2':'LCD: 0x06840000 - 0x0685FFFF (128KB)',
-  'B_TS2':'LCD: 0x06840000 - 0x0685FFFF (128KB)',
-  'C_TS2':'LCD: 0x06840000 - 0x0685FFFF (128KB)',
-  'D_TS2':'LCD: 0x06840000 - 0x0685FFFF (128KB)',
+  'A_TS2':'<span class="func">LCD:</span> <span class="numm">0x06840000 - 0x0685FFFF</span> <span class="deff">(128KB)</span>',
+  'B_TS2':'<span class="func">LCD:</span> <span class="numm">0x06840000 - 0x0685FFFF</span> <span class="deff">(128KB)</span>',
+  'C_TS2':'<span class="func">LCD:</span> <span class="numm">0x06840000 - 0x0685FFFF</span> <span class="deff">(128KB)</span>',
+  'D_TS2':'<span class="func">LCD:</span> <span class="numm">0x06840000 - 0x0685FFFF</span> <span class="deff">(128KB)</span>',
 
   // Texture Slot 3
-  'A_TS3':'LCD: 0x06860000 - 0x0687FFFF (128KB)',
-  'B_TS3':'LCD: 0x06860000 - 0x0687FFFF (128KB)',
-  'C_TS3':'LCD: 0x06860000 - 0x0687FFFF (128KB)',
-  'D_TS3':'LCD: 0x06860000 - 0x0687FFFF (128KB)',
+  'A_TS3':'<span class="func">LCD:</span> <span class="numm">0x06860000 - 0x0687FFFF</span> <span class="deff">(128KB)</span>',
+  'B_TS3':'<span class="func">LCD:</span> <span class="numm">0x06860000 - 0x0687FFFF</span> <span class="deff">(128KB)</span>',
+  'C_TS3':'<span class="func">LCD:</span> <span class="numm">0x06860000 - 0x0687FFFF</span> <span class="deff">(128KB)</span>',
+  'D_TS3':'<span class="func">LCD:</span> <span class="numm">0x06860000 - 0x0687FFFF</span> <span class="deff">(128KB)</span>',
 
   // Texture Palette
-  'E_TPAL' :'LCD: 0x06880000 - 0x0688FFFF ( 64KB)',
-  'F_TPAL0':'LCD: 0x06890000 - 0x06893FFF ( 16KB)',
-  'G_TPAL0':'LCD: 0x06890000 - 0x06893FFF ( 16KB)',
-  'F_TPAL1':'LCD: 0x06894000 - 0x06897FFF ( 16KB)',
-  'G_TPAL1':'LCD: 0x06894000 - 0x06897FFF ( 16KB)',
-  'F_TPAL4':'LCD: 0x06890000 - 0x06893FFF ( 16KB)',
-  'G_TPAL4':'LCD: 0x06890000 - 0x06893FFF ( 16KB)',
-  'F_TPAL5':'LCD: 0x06894000 - 0x06897FFF ( 16KB)',
-  'G_TPAL5':'LCD: 0x06894000 - 0x06897FFF ( 16KB)',
+  'E_TPAL' :'<span class="func">LCD:</span> <span class="numm">0x06880000 - 0x0688FFFF</span> <span class="deff">( 64KB)</span>',
+  'F_TPAL0':'<span class="func">LCD:</span> <span class="numm">0x06890000 - 0x06893FFF</span> <span class="deff">( 16KB)</span>',
+  'G_TPAL0':'<span class="func">LCD:</span> <span class="numm">0x06890000 - 0x06893FFF</span> <span class="deff">( 16KB)</span>',
+  'F_TPAL1':'<span class="func">LCD:</span> <span class="numm">0x06894000 - 0x06897FFF</span> <span class="deff">( 16KB)</span>',
+  'G_TPAL1':'<span class="func">LCD:</span> <span class="numm">0x06894000 - 0x06897FFF</span> <span class="deff">( 16KB)</span>',
+  'F_TPAL4':'<span class="func">LCD:</span> <span class="numm">0x06890000 - 0x06893FFF</span> <span class="deff">( 16KB)</span>',
+  'G_TPAL4':'<span class="func">LCD:</span> <span class="numm">0x06890000 - 0x06893FFF</span> <span class="deff">( 16KB)</span>',
+  'F_TPAL5':'<span class="func">LCD:</span> <span class="numm">0x06894000 - 0x06897FFF</span> <span class="deff">( 16KB)</span>',
+  'G_TPAL5':'<span class="func">LCD:</span> <span class="numm">0x06894000 - 0x06897FFF</span> <span class="deff">( 16KB)</span>',
 };
 
 var Sel = {'A':'', 'B':'', 'C':'', 'D':'', 'E':'', 'F':'', 'G':'', 'H':'', 'I':''};
@@ -213,15 +222,15 @@ function loadp() {
   var i, allElem = document.forms["banks"].elements;
 
   // Load parameters
-  Sel['A'] = getParameterByName('A');
-  Sel['B'] = getParameterByName('B');
-  Sel['C'] = getParameterByName('C');
-  Sel['D'] = getParameterByName('D');
-  Sel['E'] = getParameterByName('E');
-  Sel['F'] = getParameterByName('F');
-  Sel['G'] = getParameterByName('G');
-  Sel['H'] = getParameterByName('H');
-  Sel['I'] = getParameterByName('I');
+  if (hasParameterByName('A')) Sel['A'] = getParameterByName('A');
+  if (hasParameterByName('B')) Sel['B'] = getParameterByName('B');
+  if (hasParameterByName('C')) Sel['C'] = getParameterByName('C');
+  if (hasParameterByName('D')) Sel['D'] = getParameterByName('D');
+  if (hasParameterByName('E')) Sel['E'] = getParameterByName('E');
+  if (hasParameterByName('F')) Sel['F'] = getParameterByName('F');
+  if (hasParameterByName('G')) Sel['G'] = getParameterByName('G');
+  if (hasParameterByName('H')) Sel['H'] = getParameterByName('H');
+  if (hasParameterByName('I')) Sel['I'] = getParameterByName('I');
 
   // Mark selected items
   for (var i=0; i < allElem.length; i++) {
@@ -308,20 +317,20 @@ function upd() {
   // Generate the function call
   FCall = document.getElementById('FunctionCall');
   if (numerr == 0) {
-    FCall.innerHTML =  "vramSetBankA(VRAM_A_" + BankingMap['f'+Sel['A']] + ");<br />";
-    FCall.innerHTML += "vramSetBankB(VRAM_B_" + BankingMap['f'+Sel['B']] + ");<br />";
-    FCall.innerHTML += "vramSetBankC(VRAM_C_" + BankingMap['f'+Sel['C']] + ");<br />";
-    FCall.innerHTML += "vramSetBankD(VRAM_D_" + BankingMap['f'+Sel['D']] + ");<br />";
-    FCall.innerHTML += "vramSetBankE(VRAM_E_" + BankingMap['f'+Sel['E']] + ");<br />";
-    FCall.innerHTML += "vramSetBankF(VRAM_F_" + BankingMap['f'+Sel['F']] + ");<br />";
-    FCall.innerHTML += "vramSetBankG(VRAM_G_" + BankingMap['f'+Sel['G']] + ");<br />";
-    FCall.innerHTML += "vramSetBankH(VRAM_H_" + BankingMap['f'+Sel['H']] + ");<br />";
-    FCall.innerHTML += "vramSetBankI(VRAM_I_" + BankingMap['f'+Sel['I']] + ");<br />";
+    FCall.innerHTML =  "<span class='func'>vramSetBankA</span>(<span class='deff'>VRAM_A_" + BankingMap['f'+Sel['A']] + "</span>);<br />";
+    FCall.innerHTML += "<span class='func'>vramSetBankB</span>(<span class='deff'>VRAM_B_" + BankingMap['f'+Sel['B']] + "</span>);<br />";
+    FCall.innerHTML += "<span class='func'>vramSetBankC</span>(<span class='deff'>VRAM_C_" + BankingMap['f'+Sel['C']] + "</span>);<br />";
+    FCall.innerHTML += "<span class='func'>vramSetBankD</span>(<span class='deff'>VRAM_D_" + BankingMap['f'+Sel['D']] + "</span>);<br />";
+    FCall.innerHTML += "<span class='func'>vramSetBankE</span>(<span class='deff'>VRAM_E_" + BankingMap['f'+Sel['E']] + "</span>);<br />";
+    FCall.innerHTML += "<span class='func'>vramSetBankF</span>(<span class='deff'>VRAM_F_" + BankingMap['f'+Sel['F']] + "</span>);<br />";
+    FCall.innerHTML += "<span class='func'>vramSetBankG</span>(<span class='deff'>VRAM_G_" + BankingMap['f'+Sel['G']] + "</span>);<br />";
+    FCall.innerHTML += "<span class='func'>vramSetBankH</span>(<span class='deff'>VRAM_H_" + BankingMap['f'+Sel['H']] + "</span>);<br />";
+    FCall.innerHTML += "<span class='func'>vramSetBankI</span>(<span class='deff'>VRAM_I_" + BankingMap['f'+Sel['I']] + "</span>);<br />";
   }
   else
     FCall.innerHTML =  "Error: Conflict found!";
 
-  // Generate the function call
+  // Generate the cpu access
   CPUAcc = document.getElementById('CPUAccess');
   if (numerr == 0) {
     CPUAcc.innerHTML =  "<b>A:</b> " + CPUAccessMap['A_'+Sel['A']] + "<br />";
@@ -348,6 +357,7 @@ function upd() {
   if (Sel['G'] != "LCD") ShareLink += "&G=" + Sel['G'];
   if (Sel['H'] != "LCD") ShareLink += "&H=" + Sel['H'];
   if (Sel['I'] != "LCD") ShareLink += "&I=" + Sel['I'];
-  ShareLink = "?" + ShareLink.substring(1);
+  ShareLink = "#" + ShareLink.substring(1);
   document.getElementById('ShareLink').innerHTML = "<a href=" + ShareLink + ">" + ShareLink + "</a>";
+  window.location.hash = ShareLink;
 }

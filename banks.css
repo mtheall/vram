@@ -40,6 +40,11 @@ td.y     { background: #FFFF00; }
 td.x     { background: #777777; }
 td.black { background: #000000; }
 
+.comm    { color: #444; }
+.func    { color: #630; }
+.deff    { color: #040; }
+.numm    { color: #008; }
+
 #Content { margin: 8pt; }
 
 #ShareLink
