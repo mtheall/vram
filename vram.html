@@ -20,7 +20,7 @@
      <tr><td class='main' style='width:350px'>
       <p class="sube"><input type="checkbox" name="SubEngine" value="yes" onClick="upd()"> Sub Engine</p>
       <h2>Base select</h2>
-      <p>DISPCNT Map Base 64KB Step</p>
+      <p>DISPCNT Map Base 64KiB Step</p>
       <select name="MS" onChange="upd()">
        <option value="0" selected>0: 0x06000000-0x0600FFFF</option>
        <option value="1"         >1: 0x06010000-0x0601FFFF</option>
@@ -31,7 +31,7 @@
        <option value="6"         >6: 0x06060000-0x0606FFFF</option>
        <option value="7"         >7: 0x06070000-0x0607FFFF</option>
       </select>
-      <p>DISPCNT Tile Base 64KB Step</p>
+      <p>DISPCNT Tile Base 64KiB Step</p>
       <select name="TS" onChange="upd()">
        <option value="0" selected>0: 0x06000000-0x0600FFFF</option>
        <option value="1"         >1: 0x06010000-0x0601FFFF</option>
@@ -412,7 +412,7 @@
         </td>
        </tr>
        <tr id='BG_MB2' style='display:none'>
-        <td>Map Base</td><td>
+        <td id='BG_MB2Txt'>Map Base</td><td>
          <select name="MB2" onChange="upd()">
           <option value="0" selected>Map Base 0</option>
           <option value="1"         >Map Base 1</option>
@@ -590,7 +590,7 @@
         </td>
        </tr>
        <tr id='BG_MB3' style='display:none'>
-        <td>Map Base</td><td>
+        <td id='BG_MB3Txt'>Map Base</td><td>
          <select name="MB3" onChange="upd()">
           <option value="0" selected>Map Base 0</option>
           <option value="1"         >Map Base 1</option>
