@@ -271,18 +271,6 @@ function bg_alloc_conflict()
       if (VRAM_BGMapping[bg][i] >= 2) numweight += (numweight == 0) ? 1 : 4;
     }
 
-    // Mark valid
-    if (numweight <= 1)
-    {
-      if (SubEngine && (i >= 64))
-      {
-        for (bg=0; bg<8; bg++)
-        {
-          VRAM_BGMapping[bg][i] = 5;
-        }
-      }
-    }
-
     // Mark warnings
     if ((numweight >= 2) && (numweight < 5))
     {
@@ -301,27 +289,30 @@ function bg_alloc_conflict()
     {
       for (bg=0; bg<8; bg+=2)
       {
-        if (SubEngine && (i >= 64))
-        {
-          if (VRAM_BGMapping[bg][i] > 0)
-            VRAM_BGMapping[bg][i] = 6;
-          else
-            VRAM_BGMapping[bg][i] = 5;
-          if (VRAM_BGMapping[bg+1][i] > 0)
-            VRAM_BGMapping[bg+1][i] = 6;
-          else
-            VRAM_BGMapping[bg+1][i] = 5;
-        }
-        else
-        {
-          if (VRAM_BGMapping[bg][i] > 0) VRAM_BGMapping[bg][i] = 4;
-          if (VRAM_BGMapping[bg+1][i] > 0) VRAM_BGMapping[bg+1][i] = 4;
-        }
+        if (VRAM_BGMapping[bg][i] > 0) VRAM_BGMapping[bg][i] = 4;
+        if (VRAM_BGMapping[bg+1][i] > 0) VRAM_BGMapping[bg+1][i] = 4;
       }
       VRAM_BGError[i] = 1;
       ret = 3;
     }
+
+    // Mark out of range for sub-engine
+    if (SubEngine && (i >= 64))
+    {
+      for (bg=0; bg<8; bg++)
+      {
+        if (VRAM_BGMapping[bg][i] > 0)
+        {
+          VRAM_BGMapping[bg][i] = 6;
+          VRAM_BGError[i] = 1;
+          ret = 3;
+        }
+        else
+          VRAM_BGMapping[bg][i] = 5;
+      }
+    }
   }
+
   VRAM_BGError[256] = 0;
   for (bg=0; bg<8; bg++)
   {
@@ -660,19 +651,19 @@ function bg_allocation()
 
   // Write results
   if (bgtype0 > 0)
-    document.getElementById('BG0_Usage').innerHTML = "Background 0: Using <b>" + V2Digits(VRAM_BGSpace[0]) + "KiB</b> for gfx and <b>" + V2Digits(VRAM_BGSpace[1]) + "KiB</b> for map.";
+    document.getElementById('BG0_Usage').innerHTML = "Background 0: Using <b>" + V2Digits(VRAM_BGSpace[0]) + "KB</b> for gfx and <b>" + V2Digits(VRAM_BGSpace[1]) + "KB</b> for map.";
   else
     document.getElementById('BG0_Usage').innerHTML = "Background 0: Not being used.";
   if (bgtype1 > 0)
-    document.getElementById('BG1_Usage').innerHTML = "Background 1: Using <b>" + V2Digits(VRAM_BGSpace[2]) + "KiB</b> for gfx and <b>" + V2Digits(VRAM_BGSpace[3]) + "KiB</b> for map.";
+    document.getElementById('BG1_Usage').innerHTML = "Background 1: Using <b>" + V2Digits(VRAM_BGSpace[2]) + "KB</b> for gfx and <b>" + V2Digits(VRAM_BGSpace[3]) + "KB</b> for map.";
   else
     document.getElementById('BG1_Usage').innerHTML = "Background 1: Not being used.";
   if (bgtype2 > 0)
-    document.getElementById('BG2_Usage').innerHTML = "Background 2: Using <b>" + V2Digits(VRAM_BGSpace[4]) + "KiB</b> for gfx and <b>" + V2Digits(VRAM_BGSpace[5]) + "KiB</b> for map.";
+    document.getElementById('BG2_Usage').innerHTML = "Background 2: Using <b>" + V2Digits(VRAM_BGSpace[4]) + "KB</b> for gfx and <b>" + V2Digits(VRAM_BGSpace[5]) + "KB</b> for map.";
   else
     document.getElementById('BG2_Usage').innerHTML = "Background 2: Not being used.";
   if (bgtype3 > 0)
-    document.getElementById('BG3_Usage').innerHTML = "Background 3: Using <b>" + V2Digits(VRAM_BGSpace[6]) + "KiB</b> for gfx and <b>" + V2Digits(VRAM_BGSpace[7]) + "KiB</b> for map.";
+    document.getElementById('BG3_Usage').innerHTML = "Background 3: Using <b>" + V2Digits(VRAM_BGSpace[6]) + "KB</b> for gfx and <b>" + V2Digits(VRAM_BGSpace[7]) + "KB</b> for map.";
   else
     document.getElementById('BG3_Usage').innerHTML = "Background 3: Not being used.";
 
@@ -718,11 +709,11 @@ function bg_allocation()
       document.getElementById('Working_Engines').innerHTML = "Works for Main Engine or Sub Engine.";
     else
       if (MaxAllocated >= 64)
-        document.getElementById('Working_Engines').innerHTML = "Works for Main Engine only!<br />For Sub Engine map, don't use more than 128KiB.";
+        document.getElementById('Working_Engines').innerHTML = "Works for Main Engine only!<br />For Sub Engine map, don't use more than 128KB.";
       else if (largebitmap)
         document.getElementById('Working_Engines').innerHTML = "Works for Main Engine only!<br />For Sub Engine map, don't use large bitmap.";
       else
-        document.getElementById('Working_Engines').innerHTML = "Works for Main Engine only!<br />For Sub Engine map, use DISPCNT 64KiB steps of 0.";
+        document.getElementById('Working_Engines').innerHTML = "Works for Main Engine only!<br />For Sub Engine map, use DISPCNT 64KB steps of 0.";
   }
 
   if ((wmode >= 0) && (bgcstatus < 3))
@@ -754,7 +745,7 @@ function bg_allocation_table()
   tableid.innerHTML = "";
   table = document.createElement('TABLE');
   tr = document.createElement('TR');
-  tr.innerHTML = "<td rowspan=2>BMP Map<br />(16KiB)</td><td rowspan=2>Tile Base<br />(16KiB)</td><td rowspan=2>Map Base<br />(2KiB)</td><td rowspan=2>Address</td><td colspan=2>BG0</td><td colspan=2>BG1</td><td colspan=2>BG2</td><td colspan=3>BG3</td>";
+  tr.innerHTML = "<td rowspan=2>BMP Map<br />(16KB)</td><td rowspan=2>Tile Base<br />(16KB)</td><td rowspan=2>Map Base<br />(2KB)</td><td rowspan=2>Address</td><td colspan=2>BG0</td><td colspan=2>BG1</td><td colspan=2>BG2</td><td colspan=3>BG3</td>";
   table.appendChild(tr);
   tr = document.createElement('TR');
   tr.innerHTML = "<td>Gfx</td><td>Map</td><td>Gfx</td><td>Map</td><td>Gfx</td><td>Map</td><td>Gfx</td><td>Map</td>";
@@ -766,7 +757,7 @@ function bg_allocation_table()
     // Boundary
     if (((i % 64) == 0) && (i != 0))
     {
-      tr.innerHTML = "<td colspan='12'>" + (i*2) + "KiB Boundary</td>";
+      tr.innerHTML = "<td colspan='12'>" + (i*2) + "KB Boundary</td>";
       table.appendChild(tr);
       tr = document.createElement('TR');
     }
@@ -827,7 +818,7 @@ function bg_allocation_table()
 
   // Last boundary
   tr = document.createElement('TR');
-  tr.innerHTML = "<td colspan='12'>" + (i*2) + "KiB Boundary</td>";
+  tr.innerHTML = "<td colspan='12'>" + (i*2) + "KB Boundary</td>";
 
   table.appendChild(tr);
 
