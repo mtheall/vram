@@ -336,11 +336,25 @@ function bg_allocation()
 
   // Set DISPCNT offsets
   SubEngine = document.forms['bgvram'].SubEngine.checked;
-  if (SubEngine) ShareLink += "&SUB=1";
-  DISPCNT_MapBase = document.forms['bgvram'].MS.options.selectedIndex;
-  if (DISPCNT_MapBase != 0) ShareLink += "&MS=" + DISPCNT_MapBase;
-  DISPCNT_TileBase = document.forms['bgvram'].TS.options.selectedIndex;
-  if (DISPCNT_TileBase != 0) ShareLink += "&TS=" + DISPCNT_TileBase;
+  if (SubEngine)
+  {
+    ShareLink += "&SUB=1";
+    document.forms['bgvram'].MS.options.selectedIndex = 0;
+    DISPCNT_MapBase = 0;
+    document.forms['bgvram'].TS.options.selectedIndex = 0;
+    DISPCNT_TileBase = 0;
+    document.forms['bgvram'].MS.disabled = true;
+    document.forms['bgvram'].TS.disabled = true;
+  }
+  else
+  {
+    DISPCNT_MapBase = document.forms['bgvram'].MS.options.selectedIndex;
+    if (DISPCNT_MapBase != 0) ShareLink += "&MS=" + DISPCNT_MapBase;
+    DISPCNT_TileBase = document.forms['bgvram'].TS.options.selectedIndex;
+    if (DISPCNT_TileBase != 0) ShareLink += "&TS=" + DISPCNT_TileBase;
+    document.forms['bgvram'].MS.disabled = false;
+    document.forms['bgvram'].TS.disabled = false;
+  }
 
   // Setup array
   for (i=0; i<257; i++)
@@ -732,7 +746,10 @@ function bg_allocation()
     Function_Call += "<span class='comm'>// Error(s) found<br />";
   else
   {
-    Function_Call += "<span class='func'>videoSetMode" + (SubEngine ? "Sub" : "") + "</span>(<span class='deff'>MODE_" + wmode + "_2D</span>);<br />";
+    Function_Call += "<span class='func'>videoSetMode" + (SubEngine ? "Sub" : "") + "</span>(<span class='deff'>MODE_" + wmode + "_2D</span>";
+    if (DISPCNT_MapBase != 0) Function_Call += " | <span class='deff'>DISPLAY_SCREEN_BASE(" + DISPCNT_MapBase + ")</span>";
+    if (DISPCNT_TileBase != 0) Function_Call += " | <span class='deff'>DISPLAY_CHAR_BASE(" + DISPCNT_TileBase + ")</span>";
+    Function_Call += ");<br />";
     if (bgcodesnippet.length > 0) Function_Call += "<br />";
     Function_Call += bgcodesnippet;
   }
