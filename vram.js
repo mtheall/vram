@@ -121,6 +121,112 @@ function loadp()
   upd();
 }
 
+function declarePrintConsoles()
+{
+  var consoles = 0;
+  var code = "";
+
+  if(document.forms['bgvram'].T0.options.selectedIndex == 3)
+    consoles |= 1;
+  if(document.forms['bgvram'].T1.options.selectedIndex == 3)
+    consoles |= 2;
+  if(document.forms['bgvram'].T2.options.selectedIndex == 7)
+    consoles |= 4;
+  if(document.forms['bgvram'].T3.options.selectedIndex == 7)
+    consoles |= 8;
+
+  if(consoles)
+  {
+    code += "<span class='func'>PrintConsole</span> ";
+    for(bit = 1, i = 0; bit <= 8; bit <<= 1, ++i)
+    {
+      if(consoles & bit)
+      {
+        if(consoles & (bit-1))
+          code += ", ";
+        code += "<span class='deff'>cs" + i + "</span>";
+      }
+    }
+    code += ";<br/>";
+  }
+
+  return code;
+}
+
+function declareKeyboards()
+{
+  var keyboards = 0;
+  var code = "";
+
+  if(document.forms['bgvram'].T0.options.selectedIndex == 4)
+    keyboards |= 1;
+  if(document.forms['bgvram'].T1.options.selectedIndex == 4)
+    keyboards |= 2;
+  if(document.forms['bgvram'].T2.options.selectedIndex == 8)
+    keyboards |= 4;
+  if(document.forms['bgvram'].T3.options.selectedIndex == 8)
+    keyboards |= 8;
+
+  if(keyboards)
+  {
+    code += "<span class='func'>Keyboard</span> ";
+    for(bit = 1, i = 0; bit <= 8; bit <<= 1, ++i)
+    {
+      if(keyboards & bit)
+      {
+        if(keyboards & (bit-1))
+          code += ", ";
+        code += "<span class='deff'>kb" + i + "</span>";
+      }
+    }
+    code += ";<br/>";
+  }
+
+  return code;
+}
+
+function bgCode(bg, mapbase, tilebase, bgtype, bgsize)
+{
+  var code = "<span class='func'>bgInit" + (SubEngine ? "Sub" : "") + "</span>(";
+  code += "<span class='numm'>" + bg + "</span>, ";
+  code += "<span class='deff'>BgType_" + bgtype + "</span>, ";
+  code += "<span class='deff'>BgSize_" + bgsize + "</span>, ";
+  code += "<span class='numm'>" + mapbase + "</span>, ";
+  code += "<span class='numm'>" + tilebase + "</span>);<br />";
+
+  return code;
+}
+
+function consoleCode(bg, mapbase, tilebase)
+{
+  var code = "<span class='func'>consoleInit</span>(";
+  code += "<span class='deff'>&cs" + bg + "</span>, ";
+  code += "<span class='numm'>" + bg + "</span>, ";
+  code += "<span class='deff'>BgType_Text4bpp</span>, ";
+  code += "<span class='deff'>BgSize_T_256x256</span>, ";
+  code += "<span class='numm'>" + mapbase + "</span>, ";
+  code += "<span class='numm'>" + tilebase + "</span>, ";
+  code += "<span class='deff'>" + (SubEngine ? "false" : "true") + "</span>, ";
+  code += "<span class='deff'>true</span>);<br />";
+
+  return code;
+}
+
+function keyboardCode(bg, mapbase, tilebase)
+{
+  var code = "<span class='func'>keyboardInit</span>(";
+  code += "<span class='deff'>&kb" + bg + "</span>, ";
+  code += "<span class='numm'>" + bg + "</span>, ";
+  code += "<span class='deff'>BgType_Text4bpp</span>, ";
+  code += "<span class='deff'>BgSize_T_256x512</span>, ";
+  code += "<span class='numm'>" + mapbase + "</span>, ";
+  code += "<span class='numm'>" + tilebase + "</span>, ";
+  code += "<span class='deff'>" + (SubEngine ? "false" : "true") + "</span>, ";
+  code += "<span class='deff'>true</span>);<br />";
+
+  return code;
+}
+
 function bg_alloc_from(bgnum, bgtype, size, maxtiles, mapbase, tilebase)
 {
   var i, j, sz, sz_t, sz_m, bgcstatus;
@@ -372,84 +478,145 @@ function bg_allocation()
 
   // Show/Hide controls
   i = document.forms['bgvram'].T0.options.selectedIndex;
+  document.getElementById('BG_TS0').style.display = "none";
+  document.getElementById('BG_NT0').style.display = "none";
+  document.getElementById('BG_MB0').style.display = "none";
+  document.getElementById('BG_TB0').style.display = "none";
   if (i > 0)
   {
-    document.getElementById('BG_TS0').style.display = "";
-    document.getElementById('BG_NT0').style.display = "";
+    if(i < 3) // Keyboard/Console have fixed bgsize/numtiles
+    {
+      document.getElementById('BG_TS0').style.display = "";
+      document.getElementById('BG_NT0').style.display = "";
+    }
+    else if(i == 3)
+    {
+      document.forms['bgvram'].TS0.options.selectedIndex = 0;
+      document.forms['bgvram'].NT0.options.selectedIndex = 3;
+    }
+    else
+    {
+      document.forms['bgvram'].TS0.options.selectedIndex = 2;
+      document.forms['bgvram'].NT0.options.selectedIndex = 26;
+    }
     document.getElementById('BG_MB0').style.display = "";
     document.getElementById('BG_TB0').style.display = "";
   }
-  else
-  {
-    document.getElementById('BG_TS0').style.display = "none";
-    document.getElementById('BG_NT0').style.display = "none";
-    document.getElementById('BG_MB0').style.display = "none";
-    document.getElementById('BG_TB0').style.display = "none";
-  }
+
   i = document.forms['bgvram'].T1.options.selectedIndex;
+  document.getElementById('BG_TS1').style.display = "none";
+  document.getElementById('BG_NT1').style.display = "none";
+  document.getElementById('BG_MB1').style.display = "none";
+  document.getElementById('BG_TB1').style.display = "none";
   if (i > 0)
   {
-    document.getElementById('BG_TS1').style.display = "";
-    document.getElementById('BG_NT1').style.display = "";
+    if(i < 3) // Keyboard/Console have fixed bgsize/numtiles
+    {
+      document.getElementById('BG_TS1').style.display = "";
+      document.getElementById('BG_NT1').style.display = "";
+    }
+    else if(i == 3)
+    {
+      document.forms['bgvram'].TS1.options.selectedIndex = 0;
+      document.forms['bgvram'].NT1.options.selectedIndex = 3;
+    }
+    else
+    {
+      document.forms['bgvram'].TS1.options.selectedIndex = 2;
+      document.forms['bgvram'].NT1.options.selectedIndex = 26;
+    }
     document.getElementById('BG_MB1').style.display = "";
     document.getElementById('BG_TB1').style.display = "";
   }
-  else
-  {
-    document.getElementById('BG_TS1').style.display = "none";
-    document.getElementById('BG_NT1').style.display = "none";
-    document.getElementById('BG_MB1').style.display = "none";
-    document.getElementById('BG_TB1').style.display = "none";
-  }
+
   i = document.forms['bgvram'].T2.options.selectedIndex;
+  document.getElementById('BG_TS2').style.display = "none";
+  document.getElementById('BG_RS2').style.display = "none";
+  document.getElementById('BG_ERS2').style.display = "none";
+  document.getElementById('BG_B8S2').style.display = "none";
+  document.getElementById('BG_B16S2').style.display = "none";
+  document.getElementById('BG_NT2').style.display = "none";
+  document.getElementById('BG_RNT2').style.display = "none";
+  document.getElementById('BG_MB2').style.display = "none";
+  document.getElementById('BG_TB2').style.display = "none";
   if (i > 0)
   {
-    document.getElementById('BG_TS2').style.display = (i < 3) ? "" : "none";
-    document.getElementById('BG_RS2').style.display = (i == 3) ? "" : "none";
-    document.getElementById('BG_ERS2').style.display = (i == 4) ? "" : "none";
-    document.getElementById('BG_B8S2').style.display = (i == 5) ? "" : "none";
-    document.getElementById('BG_B16S2').style.display = (i == 6) ? "" : "none";
-    document.getElementById('BG_NT2').style.display = ((i != 3) && (i < 5)) ? "" : "none";
-    document.getElementById('BG_RNT2').style.display = (i == 3) ? "" : "none";
+    if(i < 3)
+      document.getElementById('BG_TS2').style.display = "";
+    else if(i == 3)
+    {
+      document.getElementById('BG_RS2').style.display = "";
+      document.getElementById('BG_RNT2').style.display = (i == 3) ? "" : "none";
+    }
+    else if(i == 4)
+      document.getElementById('BG_ERS2').style.display = "";
+    else if(i == 5)
+      document.getElementById('BG_B8S2').style.display = "";
+    else if(i == 6)
+      document.getElementById('BG_B16S2').style.display = "";
+    else if(i == 7)
+    {
+      document.forms['bgvram'].TS2.options.selectedIndex = 0;
+      document.forms['bgvram'].NT2.options.selectedIndex = 3;
+    }
+    else
+    {
+      document.forms['bgvram'].TS2.options.selectedIndex = 2;
+      document.forms['bgvram'].NT2.options.selectedIndex = 26;
+    }
+
+    if(i != 3 && i < 5)
+      document.getElementById('BG_NT2').style.display = "";
+
     document.getElementById('BG_MB2').style.display = "";
-    document.getElementById('BG_TB2').style.display = (i < 5) ? "" : "none";
+
+    if(i != 5 && i != 6)
+      document.getElementById('BG_TB2').style.display = "";
   }
-  else
-  {
-    document.getElementById('BG_TS2').style.display = "none";
-    document.getElementById('BG_RS2').style.display = "none";
-    document.getElementById('BG_ERS2').style.display = "none";
-    document.getElementById('BG_B8S2').style.display = "none";
-    document.getElementById('BG_B16S2').style.display = "none";
-    document.getElementById('BG_NT2').style.display = "none";
-    document.getElementById('BG_RNT2').style.display = "none";
-    document.getElementById('BG_MB2').style.display = "none";
-    document.getElementById('BG_TB2').style.display = "none";
-  }
+
   i = document.forms['bgvram'].T3.options.selectedIndex;
+  document.getElementById('BG_TS3').style.display = "none";
+  document.getElementById('BG_RS3').style.display = "none";
+  document.getElementById('BG_ERS3').style.display = "none";
+  document.getElementById('BG_B8S3').style.display = "none";
+  document.getElementById('BG_B16S3').style.display = "none";
+  document.getElementById('BG_NT3').style.display = "none";
+  document.getElementById('BG_RNT3').style.display = "none";
+  document.getElementById('BG_MB3').style.display = "none";
+  document.getElementById('BG_TB3').style.display = "none";
   if (i > 0)
   {
-    document.getElementById('BG_TS3').style.display = (i < 3) ? "" : "none";
-    document.getElementById('BG_RS3').style.display = (i == 3) ? "" : "none";
-    document.getElementById('BG_ERS3').style.display = (i == 4) ? "" : "none";
-    document.getElementById('BG_B8S3').style.display = (i == 5) ? "" : "none";
-    document.getElementById('BG_B16S3').style.display = (i == 6) ? "" : "none";
-    document.getElementById('BG_NT3').style.display = ((i != 3) && (i < 5)) ? "" : "none";
-    document.getElementById('BG_RNT3').style.display = (i == 3) ? "" : "none";
+    if(i < 3)
+      document.getElementById('BG_TS3').style.display = "";
+    else if(i == 3)
+    {
+      document.getElementById('BG_RS3').style.display = "";
+      document.getElementById('BG_RNT3').style.display = "";
+    }
+    else if(i == 4)
+      document.getElementById('BG_ERS3').style.display = "";
+    else if(i == 5)
+      document.getElementById('BG_B8S3').style.display = "";
+    else if(i == 6)
+      document.getElementById('BG_B16S3').style.display = "";
+    else if(i == 7)
+    {
+      document.forms['bgvram'].TS3.options.selectedIndex = 0;
+      document.forms['bgvram'].NT3.options.selectedIndex = 3;
+    }
+    else
+    {
+      document.forms['bgvram'].TS3.options.selectedIndex = 2;
+      document.forms['bgvram'].NT3.options.selectedIndex = 26;
+    }
+
+    if(i != 3 && i < 5)
+      document.getElementById('BG_NT3').style.display = "";
+
     document.getElementById('BG_MB3').style.display = "";
-    document.getElementById('BG_TB3').style.display = (i < 5) ? "" : "none";
-  }
-  else
-  {
-    document.getElementById('BG_TS3').style.display = "none";
-    document.getElementById('BG_RS3').style.display = "none";
-    document.getElementById('BG_ERS3').style.display = "none";
-    document.getElementById('BG_B8S3').style.display = "none";
-    document.getElementById('BG_B16S3').style.display = "none";
-    document.getElementById('BG_NT3').style.display = "none";
-    document.getElementById('BG_RNT3').style.display = "none";
-    document.getElementById('BG_MB3').style.display = "none";
-    document.getElementById('BG_TB3').style.display = "none";
+
+    if(i != 5 && i != 6)
+      document.getElementById('BG_TB3').style.display = "";
   }
 
   // Map BG 0
@@ -472,19 +639,24 @@ function bg_allocation()
       szopt = document.forms['bgvram'].TS0.options;
       document.getElementById('BG_DESC0').innerHTML = "* 256 colors tiles<br />* 16 Extended Palettes";
     } break;
-  case 2: {
+  case 2:
+  case 3:
+  case 4: {
       sz = document.forms['bgvram'].TS0.options.selectedIndex;
       szopt = document.forms['bgvram'].TS0.options;
       document.getElementById('BG_DESC0').innerHTML = "* 16 colors tiles<br />* 16 Palettes";
+      bgtype0 = 2;
     } break;
   }
   if (bgtype0 > 0)
   {
     ShareLink += "&S0=" + sz;
-    bgcodesnippet += "<span class='func'>bgInit" + (SubEngine ? "Sub" : "") + "</span>(<span class='numm'>0</span>";
-    bgcodesnippet += ", <span class='deff'>BgType_" + document.forms['bgvram'].T0.options[document.forms['bgvram'].T0.options.selectedIndex].value + "</span>";
-    bgcodesnippet += ", <span class='deff'>BgSize_" + szopt[szopt.selectedIndex].value + "</span>";
-    bgcodesnippet += ", <span class='numm'>" + mapbase + "</span>, <span class='numm'>" + tilebase + "</span>);<br />";
+    if(document.forms['bgvram'].T0.options.selectedIndex == 3)
+      bgcodesnippet += consoleCode(0, mapbase, tilebase);
+    else if(document.forms['bgvram'].T0.options.selectedIndex == 4)
+      bgcodesnippet += keyboardCode(0, mapbase, tilebase);
+    else
+      bgcodesnippet += bgCode(0, mapbase, tilebase, document.forms['bgvram'].T0.options[document.forms['bgvram'].T0.options.selectedIndex].value, szopt[szopt.selectedIndex].value);
   }
   bg_alloc_from(0, bgtype0, sz, maxtiles, mapbase, tilebase);
 
@@ -508,19 +680,24 @@ function bg_allocation()
       szopt = document.forms['bgvram'].TS1.options;
       document.getElementById('BG_DESC1').innerHTML = "* 256 colors tiles<br />* 16 Extended Palettes";
     } break;
-  case 2: {
+  case 2: 
+  case 3:
+  case 4: {
       sz = document.forms['bgvram'].TS1.options.selectedIndex;
       szopt = document.forms['bgvram'].TS1.options;
       document.getElementById('BG_DESC1').innerHTML = "* 16 colors tiles<br />* 16 Palettes";
+      bgtype1 = 2;
     } break;
   }
   if (bgtype1 > 0)
   {
     ShareLink += "&S1=" + sz;
-    bgcodesnippet += "<span class='func'>bgInit" + (SubEngine ? "Sub" : "") + "</span>(<span class='numm'>1</span>";
-    bgcodesnippet += ", <span class='deff'>BgType_" + document.forms['bgvram'].T1.options[document.forms['bgvram'].T1.options.selectedIndex].value + "</span>";
-    bgcodesnippet += ", <span class='deff'>BgSize_" + szopt[szopt.selectedIndex].value + "</span>";
-    bgcodesnippet += ", <span class='numm'>" + mapbase + "</span>, <span class='numm'>" + tilebase + "</span>);<br />";
+    if(document.forms['bgvram'].T1.options.selectedIndex == 3)
+      bgcodesnippet += consoleCode(1, mapbase, tilebase);
+    else if(document.forms['bgvram'].T1.options.selectedIndex == 4)
+      bgcodesnippet += keyboardCode(1, mapbase, tilebase);
+    else
+      bgcodesnippet += bgCode(1, mapbase, tilebase, document.forms['bgvram'].T1.options[document.forms['bgvram'].T1.options.selectedIndex].value, szopt[szopt.selectedIndex].value);
   }
   bg_alloc_from(1, bgtype1, sz, maxtiles, mapbase, tilebase);
 
@@ -548,10 +725,13 @@ function bg_allocation()
       szopt = document.forms['bgvram'].TS2.options;
       document.getElementById('BG_DESC2').innerHTML = "* 256 colors tiles<br />* 16 Extended Palettes";
     } break;
-  case 2: {
+  case 2: 
+  case 7:
+  case 8: {
       sz = document.forms['bgvram'].TS2.options.selectedIndex;
       szopt = document.forms['bgvram'].TS2.options;
       document.getElementById('BG_DESC2').innerHTML = "* 16 colors tiles<br />* 16 Palettes";
+      bgtype2 = 2;
     } break;
   case 3: {
       sz = document.forms['bgvram'].RS2.options.selectedIndex;
@@ -579,17 +759,12 @@ function bg_allocation()
   if (bgtype2 > 0)
   {
     ShareLink += "&S2=" + sz;
-    bgcodesnippet += "<span class='func'>bgInit" + (SubEngine ? "Sub" : "") + "</span>(<span class='numm'>2</span>";
-    bgcodesnippet += ", <span class='deff'>BgType_" + document.forms['bgvram'].T2.options[document.forms['bgvram'].T2.options.selectedIndex].value + "</span>";
-    if (szopt[szopt.selectedIndex].value == 'B8_256x192')
-      bgcodesnippet += ", <span class='deff'>BgSize_B8_256x256</span>";
-    else if (szopt[szopt.selectedIndex].value == 'B16_256x192')
-      bgcodesnippet += ", <span class='deff'>BgSize_B16_256x256</span>";
+    if(document.forms['bgvram'].T2.options.selectedIndex == 7)
+      bgcodesnippet += consoleCode(2, mapbase, tilebase);
+    else if(document.forms['bgvram'].T2.options.selectedIndex == 8)
+      bgcodesnippet += keyboardCode(2, mapbase, tilebase);
     else
-      bgcodesnippet += ", <span class='deff'>BgSize_" + szopt[szopt.selectedIndex].value + "</span>";
-    bgcodesnippet += ", <span class='numm'>" + mapbase + "</span>, <span class='numm'>" + tilebase + "</span>);<br />";
-    if ((szopt[szopt.selectedIndex].value == 'B8_512x1024') || (szopt[szopt.selectedIndex].value == 'B8_1024x512')) largebitmap = true;
-    if (SubEngine && largebitmap) bgcodesnippet += "<span class='comm'>// Error! Large bitmap isn't supported on Sub Engine</span>";
+      bgcodesnippet += bgCode(2, mapbase, tilebase, document.forms['bgvram'].T2.options[document.forms['bgvram'].T2.options.selectedIndex].value, szopt[szopt.selectedIndex].value);
   }
   bg_alloc_from(2, bgtype2, sz, maxtiles, mapbase, tilebase);
 
@@ -617,10 +792,13 @@ function bg_allocation()
       szopt = document.forms['bgvram'].TS3.options;
       document.getElementById('BG_DESC3').innerHTML = "* 256 colors tiles<br />* 16 Extended Palettes";
     } break;
-  case 2: {
+  case 2:
+  case 7:
+  case 8: {
       sz = document.forms['bgvram'].TS3.options.selectedIndex;
       szopt = document.forms['bgvram'].TS3.options;
       document.getElementById('BG_DESC3').innerHTML = "* 16 colors tiles<br />* 16 Palettes";
+      bgtype3 = 2;
     } break;
   case 3: {
       sz = document.forms['bgvram'].RS3.options.selectedIndex;
@@ -648,15 +826,12 @@ function bg_allocation()
   if (bgtype3 > 0)
   {
     ShareLink += "&S3=" + sz;
-    bgcodesnippet += "<span class='func'>bgInit" + (SubEngine ? "Sub" : "") + "</span>(<span class='numm'>3</span>";
-    bgcodesnippet += ", <span class='deff'>BgType_" + document.forms['bgvram'].T3.options[document.forms['bgvram'].T3.options.selectedIndex].value + "</span>";
-    if (szopt[szopt.selectedIndex].value == 'B8_256x192')
-      bgcodesnippet += ", <span class='deff'>BgSize_B8_256x256</span>";
-    else if (szopt[szopt.selectedIndex].value == 'B16_256x192')
-      bgcodesnippet += ", <span class='deff'>BgSize_B16_256x256</span>";
+    if(document.forms['bgvram'].T3.options.selectedIndex == 7)
+      bgcodesnippet += consoleCode(3, mapbase, tilebase);
+    else if(document.forms['bgvram'].T3.options.selectedIndex == 8)
+      bgcodesnippet += keyboardCode(3, mapbase, tilebase);
     else
-      bgcodesnippet += ", <span class='deff'>BgSize_" + szopt[szopt.selectedIndex].value + "</span>";
-    bgcodesnippet += ", <span class='numm'>" + mapbase + "</span>, <span class='numm'>" + tilebase + "</span>);<br />";
+      bgcodesnippet += bgCode(3, mapbase, tilebase, document.forms['bgvram'].T3.options[document.forms['bgvram'].T3.options.selectedIndex].value, szopt[szopt.selectedIndex].value);
   }
   bg_alloc_from(3, bgtype3, sz, maxtiles, mapbase, tilebase);
 
@@ -746,6 +921,8 @@ function bg_allocation()
     Function_Call += "<span class='comm'>// Error(s) found<br />";
   else
   {
+    Function_Call += declarePrintConsoles();
+    Function_Call += declareKeyboards();
     Function_Call += "<span class='func'>videoSetMode" + (SubEngine ? "Sub" : "") + "</span>(<span class='deff'>MODE_" + wmode + "_2D</span>";
     if (DISPCNT_MapBase != 0) Function_Call += " | <span class='deff'>DISPLAY_SCREEN_BASE(" + DISPCNT_MapBase + ")</span>";
     if (DISPCNT_TileBase != 0) Function_Call += " | <span class='deff'>DISPLAY_CHAR_BASE(" + DISPCNT_TileBase + ")</span>";
