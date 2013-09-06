@@ -87,6 +87,7 @@ function loadp()
   if (hasParameterByName('S1')) document.forms['bgvram'].TS1.options.selectedIndex = getParameterByName('S1');
   if (hasParameterByName('T2')) document.forms['bgvram'].T2.options.selectedIndex = getParameterByName('T2');
   if (hasParameterByName('NT2')) document.forms['bgvram'].NT2.options.selectedIndex = (getParameterByName('NT2') / 32) - 1;
+  if (hasParameterByName('RNT2')) document.forms['bgvram'].RNT2.options.selectedIndex = (getParameterByName('RNT2') / 32) - 1;
   if (hasParameterByName('MB2')) document.forms['bgvram'].MB2.options.selectedIndex = getParameterByName('MB2');
   if (hasParameterByName('TB2')) document.forms['bgvram'].TB2.options.selectedIndex = getParameterByName('TB2');
   if (hasParameterByName('S2'))
@@ -99,6 +100,7 @@ function loadp()
   }
   if (hasParameterByName('T3')) document.forms['bgvram'].T3.options.selectedIndex = getParameterByName('T3');
   if (hasParameterByName('NT3')) document.forms['bgvram'].NT3.options.selectedIndex = (getParameterByName('NT3') / 32) - 1;
+  if (hasParameterByName('RNT3')) document.forms['bgvram'].RNT3.options.selectedIndex = (getParameterByName('RNT3') / 32) - 1;
   if (hasParameterByName('MB3')) document.forms['bgvram'].MB3.options.selectedIndex = getParameterByName('MB3');
   if (hasParameterByName('TB3')) document.forms['bgvram'].TB3.options.selectedIndex = getParameterByName('TB3');
   if (hasParameterByName('S3'))
@@ -491,11 +493,13 @@ function bg_allocation()
     }
     else if(i == 3)
     {
+      // console, 256x256, 128 tiles
       document.forms['bgvram'].TS0.options.selectedIndex = 0;
       document.forms['bgvram'].NT0.options.selectedIndex = 3;
     }
     else
     {
+      // keyboard, 256x512, 864 tiles
       document.forms['bgvram'].TS0.options.selectedIndex = 2;
       document.forms['bgvram'].NT0.options.selectedIndex = 26;
     }
@@ -517,11 +521,13 @@ function bg_allocation()
     }
     else if(i == 3)
     {
+      // console, 256x256, 128 tiles
       document.forms['bgvram'].TS1.options.selectedIndex = 0;
       document.forms['bgvram'].NT1.options.selectedIndex = 3;
     }
     else
     {
+      // keyboard, 256x512, 864 tiles
       document.forms['bgvram'].TS1.options.selectedIndex = 2;
       document.forms['bgvram'].NT1.options.selectedIndex = 26;
     }
@@ -546,7 +552,7 @@ function bg_allocation()
     else if(i == 3)
     {
       document.getElementById('BG_RS2').style.display = "";
-      document.getElementById('BG_RNT2').style.display = (i == 3) ? "" : "none";
+      document.getElementById('BG_RNT2').style.display = "";
     }
     else if(i == 4)
       document.getElementById('BG_ERS2').style.display = "";
@@ -556,11 +562,13 @@ function bg_allocation()
       document.getElementById('BG_B16S2').style.display = "";
     else if(i == 7)
     {
+      // console, 256x256, 128 tiles
       document.forms['bgvram'].TS2.options.selectedIndex = 0;
       document.forms['bgvram'].NT2.options.selectedIndex = 3;
     }
     else
     {
+      // keyboard, 256x512, 864 tiles
       document.forms['bgvram'].TS2.options.selectedIndex = 2;
       document.forms['bgvram'].NT2.options.selectedIndex = 26;
     }
@@ -601,11 +609,13 @@ function bg_allocation()
       document.getElementById('BG_B16S3').style.display = "";
     else if(i == 7)
     {
+      // console, 256x256, 128 tiles
       document.forms['bgvram'].TS3.options.selectedIndex = 0;
       document.forms['bgvram'].NT3.options.selectedIndex = 3;
     }
     else
     {
+      // keyboard, 256x512, 864 tiles
       document.forms['bgvram'].TS3.options.selectedIndex = 2;
       document.forms['bgvram'].NT3.options.selectedIndex = 26;
     }
@@ -650,13 +660,15 @@ function bg_allocation()
   }
   if (bgtype0 > 0)
   {
-    ShareLink += "&S0=" + sz;
     if(document.forms['bgvram'].T0.options.selectedIndex == 3)
       bgcodesnippet += consoleCode(0, mapbase, tilebase);
     else if(document.forms['bgvram'].T0.options.selectedIndex == 4)
       bgcodesnippet += keyboardCode(0, mapbase, tilebase);
     else
+    {
+      ShareLink += "&S0=" + sz;
       bgcodesnippet += bgCode(0, mapbase, tilebase, document.forms['bgvram'].T0.options[document.forms['bgvram'].T0.options.selectedIndex].value, szopt[szopt.selectedIndex].value);
+    }
   }
   bg_alloc_from(0, bgtype0, sz, maxtiles, mapbase, tilebase);
 
@@ -691,27 +703,41 @@ function bg_allocation()
   }
   if (bgtype1 > 0)
   {
-    ShareLink += "&S1=" + sz;
     if(document.forms['bgvram'].T1.options.selectedIndex == 3)
       bgcodesnippet += consoleCode(1, mapbase, tilebase);
     else if(document.forms['bgvram'].T1.options.selectedIndex == 4)
       bgcodesnippet += keyboardCode(1, mapbase, tilebase);
     else
+    {
+      ShareLink += "&S1=" + sz;
       bgcodesnippet += bgCode(1, mapbase, tilebase, document.forms['bgvram'].T1.options[document.forms['bgvram'].T1.options.selectedIndex].value, szopt[szopt.selectedIndex].value);
+    }
   }
   bg_alloc_from(1, bgtype1, sz, maxtiles, mapbase, tilebase);
 
   // Map BG 2
   bgtype2 = document.forms['bgvram'].T2.options.selectedIndex;
-  if (bgtype2 == 3)
-    maxtiles = document.forms['bgvram'].RNT2.options[document.forms['bgvram'].RNT2.options.selectedIndex].value;
-  else
-    maxtiles = document.forms['bgvram'].NT2.options[document.forms['bgvram'].NT2.options.selectedIndex].value;
   mapbase = document.forms['bgvram'].MB2.options.selectedIndex;
-  tilebase = document.forms['bgvram'].TB2.options.selectedIndex;
-  if (bgtype2 > 0)
+  if(bgtype2 > 0 && (bgtype2 < 5 || bgtype2 > 6))
   {
-    ShareLink += "&T2=" + bgtype2 + "&NT2=" + maxtiles + "&MB2=" + mapbase + "&TB2=" + tilebase;
+    tilebase = document.forms['bgvram'].TB2.options.selectedIndex;
+    if(bgtype2 == 3)
+    {
+      maxtiles = document.forms['bgvram'].RNT2.options[document.forms['bgvram'].RNT2.options.selectedIndex].value;
+      ShareLink += "&T2=" + bgtype2 + "&RNT2=" + maxtiles + "&MB2=" + mapbase + "&TB2=" + tilebase;
+    }
+    else
+    {
+      maxtiles = document.forms['bgvram'].NT2.options[document.forms['bgvram'].NT2.options.selectedIndex].value;
+      if(bgtype2 == 7 || bgtype2 == 8)
+        ShareLink += "&T2=" + bgtype2 + "&MB2=" + mapbase + "&TB2=" + tilebase;
+      else
+        ShareLink += "&T2=" + bgtype2 + "&NT2=" + maxtiles + "&MB2=" + mapbase + "&TB2=" + tilebase;
+    }
+  }
+  else if (bgtype2 == 5 || bgtype2 == 6)
+  {
+    ShareLink += "&T2=" + bgtype2 + "&MB2=" + mapbase;
   }
   document.getElementById('BG_MB2Txt').innerHTML = "Map Base";
   switch (bgtype2)
@@ -758,27 +784,41 @@ function bg_allocation()
   }
   if (bgtype2 > 0)
   {
-    ShareLink += "&S2=" + sz;
     if(document.forms['bgvram'].T2.options.selectedIndex == 7)
       bgcodesnippet += consoleCode(2, mapbase, tilebase);
     else if(document.forms['bgvram'].T2.options.selectedIndex == 8)
       bgcodesnippet += keyboardCode(2, mapbase, tilebase);
     else
+    {
+      ShareLink += "&S2=" + sz;
       bgcodesnippet += bgCode(2, mapbase, tilebase, document.forms['bgvram'].T2.options[document.forms['bgvram'].T2.options.selectedIndex].value, szopt[szopt.selectedIndex].value);
+    }
   }
   bg_alloc_from(2, bgtype2, sz, maxtiles, mapbase, tilebase);
 
   // Map BG 3
   bgtype3 = document.forms['bgvram'].T3.options.selectedIndex;
-  if (bgtype3 == 3)
-    maxtiles = document.forms['bgvram'].RNT3.options[document.forms['bgvram'].RNT3.options.selectedIndex].value;
-  else
-    maxtiles = document.forms['bgvram'].NT3.options[document.forms['bgvram'].NT3.options.selectedIndex].value;
   mapbase = document.forms['bgvram'].MB3.options.selectedIndex;
-  tilebase = document.forms['bgvram'].TB3.options.selectedIndex;
-  if (bgtype3 > 0)
+  if(bgtype3 > 0 && (bgtype3 < 5 || bgtype3 > 6))
   {
-    ShareLink += "&T3=" + bgtype3 + "&NT3=" + maxtiles + "&MB3=" + mapbase + "&TB3=" + tilebase;
+    tilebase = document.forms['bgvram'].TB3.options.selectedIndex;
+    if(bgtype3 == 3)
+    {
+      maxtiles = document.forms['bgvram'].RNT3.options[document.forms['bgvram'].RNT3.options.selectedIndex].value;
+      ShareLink += "&T3=" + bgtype3 + "&RNT3=" + maxtiles + "&MB3=" + mapbase + "&TB3=" + tilebase;
+    }
+    else
+    {
+      maxtiles = document.forms['bgvram'].NT3.options[document.forms['bgvram'].NT3.options.selectedIndex].value;
+      if(bgtype3 == 7 || bgtype3 == 8)
+        ShareLink += "&T3=" + bgtype3 + "&MB3=" + mapbase + "&TB3=" + tilebase;
+      else
+        ShareLink += "&T3=" + bgtype3 + "&NT3=" + maxtiles + "&MB3=" + mapbase + "&TB3=" + tilebase;
+    }
+  }
+  else if (bgtype3 == 5 || bgtype3 == 6)
+  {
+    ShareLink += "&T3=" + bgtype3 + "&MB3=" + mapbase;
   }
   document.getElementById('BG_MB3Txt').innerHTML = "Map Base";
   switch (bgtype3)
@@ -825,13 +865,15 @@ function bg_allocation()
   }
   if (bgtype3 > 0)
   {
-    ShareLink += "&S3=" + sz;
     if(document.forms['bgvram'].T3.options.selectedIndex == 7)
       bgcodesnippet += consoleCode(3, mapbase, tilebase);
     else if(document.forms['bgvram'].T3.options.selectedIndex == 8)
       bgcodesnippet += keyboardCode(3, mapbase, tilebase);
     else
+    {
+      ShareLink += "&S3=" + sz;
       bgcodesnippet += bgCode(3, mapbase, tilebase, document.forms['bgvram'].T3.options[document.forms['bgvram'].T3.options.selectedIndex].value, szopt[szopt.selectedIndex].value);
+    }
   }
   bg_alloc_from(3, bgtype3, sz, maxtiles, mapbase, tilebase);
 
